@@ -15,29 +15,62 @@ public class GraphTraversal {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//Vertex[] graph = generateGraph(new char[][]{{'a', 'b', '4'}, {'b', 'd', '2'}, {'b', 'e', '2'}, {'d', 'c', '6'}, {'d', 'f', '1'}, {'f', 'c', '1', '2'}});
 		Vertex[] graph = generateGraph(new char[][]{{'a', 'b', '5'}, {'b', 'c', '2'}, {'c', 'd', '3'}, {'b', 'e', '4'}});
 		
-		char[] path = new char[]{'a', 'b', 'e'};
+		char[] searchPath = new char[]{'a', 'c', 'e'};
 		
 		char[][] routes = null;
 		int[] totalWeights = null;
-		Vertex start = getVertexWithStartNode(graph, path[0]);
+		Vertex start = getVertexWithStartNode(graph, searchPath[0]);
 		routes = new char[1][];
 		routes[0] = new char[]{start.source};
-		routes = traverse(routes, totalWeights, start, graph);
-		for(char[] route:routes)
-			System.out.println(Arrays.toString(route));
+		routes = traverse(routes, totalWeights, start, graph, searchPath);
+		for(char[] route:routes){
+			boolean isCompletePath = true;
+			for(char point:searchPath){
+				if(!arrayContains(route, point))
+					isCompletePath = false;
+			}
+			if(isCompletePath){
+				System.out.println(Arrays.toString(route) + "--->" + getPathLength(route, graph));
+			}
+		}
 	}
 	
+	private static int getPathLength(char[] route, Vertex[] graph) {
+		// TODO Auto-generated method stub
+		int distance = 0;
+		for(int i=0;i<route.length;i++){
+			if(i+1<route.length){
+				Vertex startNode = getVertexWithStartNode(graph, route[i]);
+				for(int j=0;j<startNode.targets.length;j++){
+					if(startNode.targets[j] == route[i+1])
+						distance += startNode.edgeWeights[j];
+				}
+			}
+			
+		}
+		return distance;
+	}
+
+	private static boolean arrayContains(char[] route, char point) {
+		// TODO Auto-generated method stub
+		for(char pointInPathRoute:route)
+			if(pointInPathRoute == point)
+				return true;
+		return false;
+	}
+
 	private static char[][] traverse(char[][] routes, int[] totalWeights,
-			Vertex vertex, Vertex[] graph) {
+			Vertex vertex, Vertex[] graph, char[] searchPath) {
 		// TODO Auto-generated method stub
 		int i=0;
 		boolean expanded = false;
 		while(i<routes.length){
 			char[] route = routes[i];
 			Vertex startNode = getVertexWithStartNode(graph, route[route.length - 1]);
-			if(startNode!=null){
+			if(startNode!=null && startNode.source!=searchPath[searchPath.length - 1]){
 				char[][] expandedRoutes = expandRoute(route, startNode);
 				routes = insertArrayAtPosition(routes, expandedRoutes, i);
 				i = i + expandedRoutes.length - 1;
@@ -46,11 +79,12 @@ public class GraphTraversal {
 		}
 		
 		for(int j=0;j<routes.length;j++){
-			if(getVertexWithStartNode(graph, routes[j][routes[j].length - 1])!=null)
+			Vertex lastNodeVertex = getVertexWithStartNode(graph, routes[j][routes[j].length - 1]);
+			if(lastNodeVertex!=null && lastNodeVertex.source!=searchPath[searchPath.length - 1])
 				expanded = true;
 		}
 		if(expanded)
-			routes = traverse(routes, totalWeights, vertex, graph);
+			routes = traverse(routes, totalWeights, vertex, graph, searchPath);
 		return routes; 
 	}
 
