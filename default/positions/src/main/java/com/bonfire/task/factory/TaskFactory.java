@@ -1,24 +1,14 @@
 package com.bonfire.task.factory;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.bonfire.task.PositionProcessTask;
 
 public class TaskFactory {
-	private HashMap<String, Double>[] bucketedPositions;
 	
-	public TaskFactory(HashMap<String, Double>[] bucketedPostions){
-		this.bucketedPositions = bucketedPostions;
-	}
-	
-	public Runnable createTaskFromConsole(String[] components){
+	public static Runnable createTaskFromConsole(String[] components, ConcurrentHashMap<String, Double> positions){
 		String currency = components[0].toUpperCase();
 		double value = Double.valueOf(components[1]);
-		return new PositionProcessTask(currency, value, bucketedPositions[getBucket(currency)]);
+		return new PositionProcessTask(currency, value, positions);
 	}
-	
-	private int getBucket(String currency){
-		return currency.hashCode()%bucketedPositions.length;
-	}
-	
 }
