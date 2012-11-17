@@ -3,33 +3,21 @@ package com.bonfire.source;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.bonfire.observer.ConsoleListener;
+import com.bonfire.task.EvaluationTask;
 
 public class PositionReceiver extends Observable{
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InterruptedException{
 		final ConcurrentHashMap<String, Double> positions = new ConcurrentHashMap<String, Double>();
-		ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-		threadPoolExecutor.scheduleAtFixedRate(new Runnable() {
-			
-			public void run() {
-				System.out.println("The positions are:");
-				for(Entry<String, Double> positionEntry:positions.entrySet()){
-					System.out.println(positionEntry.getKey() + " " + positionEntry.getValue());
-				}
-			}
-		}, 60, 60, TimeUnit.SECONDS);
-		ConsoleListener consoleListener = new ConsoleListener(positions);
-		PositionReceiver positionReceiver = new PositionReceiver();
-		positionReceiver.addObserver(consoleListener);
-		positionReceiver.start();
-		threadPoolExecutor.shutdown();
+		Thread consoleReceiverThread = new ConsoleReceiverThread(positions);
+		consoleReceiverThread.join();
+		consoleReceiverThread.start();
 	}
 
 	private void start() {
@@ -54,6 +42,26 @@ public class PositionReceiver extends Observable{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private static class ConsoleReceiverThread extends Thread{
+		private static final int PERIOD = 20;
+		private ConcurrentHashMap<String, Double> positions;
+		
+		public ConsoleReceiverThread(ConcurrentHashMap<String, Double> positions) {
+			this.positions = positions;
+		}
+		@Override
+		public void run() {
+			ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+			threadPoolExecutor.scheduleAtFixedRate(new EvaluationTask(positions), PERIOD, PERIOD, TimeUnit.SECONDS);
+			ConsoleListener consoleListener = new ConsoleListener(positions);
+			PositionReceiver positionReceiver = new PositionReceiver();
+			positionReceiver.addObserver(consoleListener);
+			positionReceiver.start();
+			threadPoolExecutor.shutdown();
+		}
+		
 	}
 
 }
