@@ -1,6 +1,8 @@
 package com.bonfire.source;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
@@ -8,26 +10,34 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.bonfire.observer.ConsoleListener;
+import com.bonfire.observer.PositionListener;
 import com.bonfire.task.EvaluationTask;
 
 public class PositionReceiver extends Observable{
+	private static final int PERIOD = 20;
 	
-	public static void main(String[] args) throws InterruptedException{
+	public static void main(String[] args) throws InterruptedException, IOException{
 		final ConcurrentHashMap<String, Double> positions = new ConcurrentHashMap<String, Double>();
-		Thread consoleReceiverThread = new ConsoleReceiverThread(positions);
-		consoleReceiverThread.join();
-		consoleReceiverThread.start();
+		PositionListener positionListener = new PositionListener(positions);
+		ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+		threadPoolExecutor.scheduleAtFixedRate(new EvaluationTask(positions), PERIOD, PERIOD, TimeUnit.SECONDS);
+		PositionReceiver positionReceiver = new PositionReceiver();
+		positionReceiver.addObserver(positionListener);
+		if(args!=null && args.length>0){
+			File file = new File(args[0]);
+			positionReceiver.read(Source.FILE, new FileReader(file));
+		}
+		positionReceiver.read(Source.CONSOLE, new InputStreamReader(System.in));
+		threadPoolExecutor.shutdown();
 	}
 
-	private void start() {
+	public void read(Source src, InputStreamReader inputStreamReader) {
 		BufferedReader consoleReader = null;
 		try{
-			consoleReader = new BufferedReader(new InputStreamReader(System.in));
+			consoleReader = new BufferedReader(inputStreamReader);
 			String inputString = null;
 			
-			while(true){
-				inputString = consoleReader.readLine();
+			while((inputString = consoleReader.readLine())!=null){
 				if(inputString.equals("quit"))
 					break;
 				setChanged();
@@ -44,24 +54,7 @@ public class PositionReceiver extends Observable{
 		}
 	}
 	
-	private static class ConsoleReceiverThread extends Thread{
-		private static final int PERIOD = 20;
-		private ConcurrentHashMap<String, Double> positions;
-		
-		public ConsoleReceiverThread(ConcurrentHashMap<String, Double> positions) {
-			this.positions = positions;
-		}
-		@Override
-		public void run() {
-			ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-			threadPoolExecutor.scheduleAtFixedRate(new EvaluationTask(positions), PERIOD, PERIOD, TimeUnit.SECONDS);
-			ConsoleListener consoleListener = new ConsoleListener(positions);
-			PositionReceiver positionReceiver = new PositionReceiver();
-			positionReceiver.addObserver(consoleListener);
-			positionReceiver.start();
-			threadPoolExecutor.shutdown();
-		}
-		
+	public enum Source{
+		CONSOLE, FILE
 	}
-
 }

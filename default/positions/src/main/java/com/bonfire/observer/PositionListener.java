@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.bonfire.task.factory.TaskFactory;
 
-public class ConsoleListener implements Observer {
+public class PositionListener implements Observer {
 
 	private static final String SEPARATOR = " ";
 	private ConcurrentHashMap<String, Double> positions;
 
-	public ConsoleListener(ConcurrentHashMap<String, Double> positions){
+	public PositionListener(ConcurrentHashMap<String, Double> positions){
 		this.positions = positions;
 	}
 	
