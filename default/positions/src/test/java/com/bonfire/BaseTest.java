@@ -5,8 +5,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.Assert;
 import org.junit.Before;
 
+import com.bonfire.factory.FactoryUtility;
+
 public class BaseTest {
 	protected ConcurrentHashMap<String, Double> positions = new ConcurrentHashMap<String, Double>();
+	protected FactoryUtility factoryUtility = new FactoryUtility();
 	
 	@Before
 	public void reset(){
