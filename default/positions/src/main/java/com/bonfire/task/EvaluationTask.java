@@ -1,5 +1,6 @@
 package com.bonfire.task;
 
+import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,7 +12,7 @@ public class EvaluationTask implements Runnable {
 	}
 
 	public void run() {
-		System.out.println("The positions are:");
+		System.out.println("The positions on " + new Date() + " are:");
 		for(Entry<String, Double> positionEntry:positions.entrySet()){
 			System.out.println(positionEntry.getKey() + " " + positionEntry.getValue());
 		}

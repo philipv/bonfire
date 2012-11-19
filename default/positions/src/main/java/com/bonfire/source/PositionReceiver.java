@@ -18,7 +18,7 @@ import com.bonfire.observer.PositionListener;
 import com.bonfire.task.EvaluationTask;
 
 public class PositionReceiver extends Observable{
-	private static final int PERIOD = 20;
+	private static final int PERIOD = 60;
 	private static final String SEPARATOR = " ";
 	private FactoryUtility factoryUtility = new FactoryUtility();
 	private ConcurrentHashMap<String, Double> positions = new ConcurrentHashMap<String, Double>();
@@ -62,6 +62,7 @@ public class PositionReceiver extends Observable{
 		}finally{
 			try {
 				reader.close();
+				inputStreamReader.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -91,7 +92,7 @@ public class PositionReceiver extends Observable{
 					}
 				}
 			}
-			System.out.println("\"" + data + "\" is not in valid format\n");
+			System.out.println("\"" + data + "\" is not in valid format and not a special command\n");
 		}catch(NumberFormatException nfe){
 			System.out.println("value:" + positionalComponents[1] + " is not a number\n");
 		}
