@@ -1,6 +1,8 @@
 package com.bonfire.source;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +21,6 @@ import com.bonfire.data.Position;
 import com.bonfire.factory.FactoryUtility;
 import com.bonfire.observer.PositionListener;
 import com.bonfire.task.EvaluationTask;
-import com.bonfire.task.PositionProcessTask;
 
 public class PositionReceiverTest extends BaseTest{
 
@@ -70,7 +71,7 @@ public class PositionReceiverTest extends BaseTest{
 	 * processed successfully be checking the final results.
 	 */
 	@Test
-	public void testConcurrentAccesOnPositions(){
+	public void testConcurrentAccessOnPositions(){
 		ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
 		threadPoolExecutor.scheduleAtFixedRate(new EvaluationTask(positions), 10, 10, TimeUnit.MILLISECONDS);
 		PositionListener positionListener = new PositionListener(positions);

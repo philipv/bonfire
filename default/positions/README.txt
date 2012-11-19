@@ -36,4 +36,7 @@ External Libraries used (which will be automatically resolved from mvn central r
  - JUnit 4.11
  - Mockito 1.9.5
  
-Code Coverage for the project: 93.4%
+Code Coverage for the project: 95.7%
+
+Note: Currently it simply uses the position listener notification thread to process the update but position listener can be re-implemented to use a thread pool, if required
+(since the task is a runnable).

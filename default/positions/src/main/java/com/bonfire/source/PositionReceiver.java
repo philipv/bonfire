@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -22,8 +22,9 @@ import com.bonfire.task.EvaluationTask;
  *  - Getting the update from different sources.
  *  - Convert the update into a position
  *  - Notify the required listeners.
+ *  - This class could be overridden by any other source of updates. Just override convert and getObserver (only if required)
  */
-public class PositionReceiver extends Observable{
+public class PositionReceiver extends UpdateReceiver<Position>{
 	private static final int PERIOD = 60;
 	private static final String SEPARATOR = " ";
 	private FactoryUtility factoryUtility = new FactoryUtility();
@@ -35,19 +36,18 @@ public class PositionReceiver extends Observable{
 	}
 
 	public void initialize(String[] args) throws FileNotFoundException {
-		PositionListener positionListener = new PositionListener(positions);
+		initialize();
 		ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
 		threadPoolExecutor.scheduleAtFixedRate(new EvaluationTask(positions), PERIOD, PERIOD, TimeUnit.SECONDS);
-		addObserver(positionListener);
 		if(args!=null && args.length>0){
 			File file = new File(args[0]);
-			read(Source.FILE, factoryUtility.createFileReader(file));
+			read(factoryUtility.createFileReader(file));
 		}
-		read(Source.CONSOLE, new InputStreamReader(System.in));
+		read(new InputStreamReader(System.in));
 		threadPoolExecutor.shutdown();
 	}
 
-	public void read(Source src, InputStreamReader inputStreamReader) {
+	private void read(InputStreamReader inputStreamReader) {
 		BufferedReader reader = null;
 		try{
 			reader = factoryUtility.createBufferedReader(inputStreamReader);
@@ -56,11 +56,7 @@ public class PositionReceiver extends Observable{
 			while((inputString = reader.readLine())!=null){
 				if(inputString.equals("quit"))
 					break;
-				Position position = convert(inputString);
-				if(position!=null){
-					setChanged();
-					notifyObservers(position);
-				}
+				processUpdate(inputString);
 			}
 		}catch(IOException e){
 			System.out.println("Cannot read from the input stream. Program will exit now");
@@ -75,10 +71,7 @@ public class PositionReceiver extends Observable{
 		}
 	}
 
-	public enum Source{
-		CONSOLE, FILE
-	}
-	
+	@Override
 	public Position convert(Object data){
 		String[] positionalComponents = null;
 		try{
@@ -111,5 +104,9 @@ public class PositionReceiver extends Observable{
 
 	public void setPositions(ConcurrentHashMap<String, Double> positions) {
 		this.positions = positions;
+	}
+	@Override
+	public Observer getObserver() {
+		return new PositionListener(positions);
 	}
 }
