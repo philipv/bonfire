@@ -2,26 +2,26 @@ package com.bonfire.task;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.bonfire.data.Position;
+
 public class PositionProcessTask implements Runnable {
-	private String currency;
-	private double value;
+	private Position position;
 	private ConcurrentHashMap<String, Double> positions;
 	
-	public PositionProcessTask(String currency, double value, ConcurrentHashMap<String, Double> positions){
-		this.currency = currency;
-		this.value = value;
+	public PositionProcessTask(Position position, ConcurrentHashMap<String, Double> positions){
+		this.position = position;
 		this.positions = positions;
 	}
 	
 	public void run() {
-		Double total = positions.get(currency);
+		Double total = positions.get(position.getCurrency());
 		if(total==null)
 			total = new Double(0.0);
-		total += value;
+		total += position.getValue();
 		if(total!=0){
-			positions.put(currency, total);
+			positions.put(position.getCurrency(), total);
 		}else{
-			positions.remove(currency);
+			positions.remove(position.getCurrency());
 		}
 	}
 	

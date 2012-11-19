@@ -2,6 +2,7 @@ package com.bonfire.source;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,13 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.bonfire.data.Position;
 import com.bonfire.observer.PositionListener;
 import com.bonfire.task.EvaluationTask;
 
 public class PositionReceiver extends Observable{
 	private static final int PERIOD = 20;
+	private static final String SEPARATOR = " ";
 	
-	public static void main(String[] args) throws InterruptedException, IOException{
+	public static void main(String[] args) throws FileNotFoundException{
 		final ConcurrentHashMap<String, Double> positions = new ConcurrentHashMap<String, Double>();
 		PositionListener positionListener = new PositionListener(positions);
 		ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -40,8 +45,11 @@ public class PositionReceiver extends Observable{
 			while((inputString = consoleReader.readLine())!=null){
 				if(inputString.equals("quit"))
 					break;
-				setChanged();
-				notifyObservers(inputString);
+				Position position = convert(inputString);
+				if(position!=null){
+					setChanged();
+					notifyObservers(position);
+				}
 			}
 		}catch(IOException e){
 			e.printStackTrace();
@@ -56,5 +64,24 @@ public class PositionReceiver extends Observable{
 	
 	public enum Source{
 		CONSOLE, FILE
+	}
+	
+	public Position convert(Object data){
+		String[] positionalComponents = null;
+		try{
+			if(data!=null && data instanceof String){
+				String stringData = (String)data;
+				positionalComponents = StringUtils.split(stringData, SEPARATOR);
+				if(positionalComponents!=null && positionalComponents.length==2){
+					Position position = new Position();
+					position.setCurrency(positionalComponents[0]);
+					position.setValue(Double.valueOf(positionalComponents[1]));
+					return position;
+				}
+			}
+		}catch(NumberFormatException nfe){
+			System.out.println(positionalComponents[1] + " is not a number");
+		}
+		return null;
 	}
 }

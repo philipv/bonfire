@@ -4,13 +4,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.bonfire.data.Position;
 import com.bonfire.task.factory.TaskFactory;
 
 public class PositionListener implements Observer {
 
-	private static final String SEPARATOR = " ";
 	private ConcurrentHashMap<String, Double> positions;
 
 	public PositionListener(ConcurrentHashMap<String, Double> positions){
@@ -18,9 +16,11 @@ public class PositionListener implements Observer {
 	}
 	
 	public void update(Observable observable, Object updatedObject) {
-		String newPosition = (String) updatedObject;
-		String[] positionalComponents = StringUtils.split(newPosition, SEPARATOR);
-		TaskFactory.createTaskFromConsole(positionalComponents, positions).run();
+		try{
+			TaskFactory.createTaskFromConsole((Position)updatedObject, positions).run();
+		} catch(ClassCastException ex){
+			System.out.println("Wrong update received on the " + getClass().getCanonicalName());
+		}
 	}
 
 }
