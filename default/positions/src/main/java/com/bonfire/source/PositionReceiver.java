@@ -57,6 +57,7 @@ public class PositionReceiver extends Observable{
 				}
 			}
 		}catch(IOException e){
+			System.out.println("Cannot read from the input stream. Program will exit now");
 			e.printStackTrace();
 		}finally{
 			try {
@@ -84,9 +85,9 @@ public class PositionReceiver extends Observable{
 					return position;
 				}
 			}
-			System.out.println(data + " is not in valid format");
+			System.out.println("\"" + data + "\" is not in valid format");
 		}catch(NumberFormatException nfe){
-			System.out.println(positionalComponents[1] + " is not a number");
+			System.out.println("value:" + positionalComponents[1] + " is not a number");
 		}
 		return null;
 	}

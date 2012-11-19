@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.bonfire.BaseTest;
@@ -35,6 +36,24 @@ public class PositionReceiverTest extends BaseTest{
 		when(bufferedReader.readLine()).thenReturn("usd 100", "quit", "usd 100", "quit");
 		positionReceiver.initialize(new String[]{"sample"});
 		assertAggregatedResult("USD", 200);
+	}
+	
+	@Test
+	public void testWithWrongInputValues() throws IOException{
+		PositionReceiver positionReceiver = createReceiver();
+		when(factoryUtility.createBufferedReader(any(InputStreamReader.class))).thenReturn(bufferedReader);
+		when(bufferedReader.readLine()).thenReturn("usd 100", "usd :86", "", "dgr", "usd 100", "quit");
+		positionReceiver.initialize(null);
+		assertAggregatedResult("USD", 200);
+	}
+	
+	@Test
+	public void testWithInputStreamFailure() throws IOException{
+		PositionReceiver positionReceiver = createReceiver();
+		when(factoryUtility.createBufferedReader(any(InputStreamReader.class))).thenReturn(bufferedReader);
+		when(bufferedReader.readLine()).thenThrow(new IOException());
+		positionReceiver.initialize(null);
+		Assert.assertEquals(0, positions.size());
 	}
 	
 	private PositionReceiver createReceiver() {
