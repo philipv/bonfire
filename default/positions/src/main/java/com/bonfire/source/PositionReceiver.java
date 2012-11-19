@@ -79,15 +79,21 @@ public class PositionReceiver extends Observable{
 				String stringData = (String)data;
 				positionalComponents = StringUtils.split(stringData, SEPARATOR);
 				if(positionalComponents!=null && positionalComponents.length==2){
-					Position position = new Position();
-					position.setCurrency(positionalComponents[0].toUpperCase());
-					position.setValue(Double.valueOf(positionalComponents[1]));
-					return position;
+					if(positionalComponents[0].length()==3){
+						Position position = new Position();
+						position.setCurrency(positionalComponents[0].toUpperCase());
+						position.setValue(Double.valueOf(positionalComponents[1]));
+						return position;
+					}
+					else{
+						System.out.println("currency:" + positionalComponents[0] + " is not a 3 char currency code\n");
+						return null;
+					}
 				}
 			}
-			System.out.println("\"" + data + "\" is not in valid format");
+			System.out.println("\"" + data + "\" is not in valid format\n");
 		}catch(NumberFormatException nfe){
-			System.out.println("value:" + positionalComponents[1] + " is not a number");
+			System.out.println("value:" + positionalComponents[1] + " is not a number\n");
 		}
 		return null;
 	}

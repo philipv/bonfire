@@ -15,5 +15,6 @@ public class EvaluationTask implements Runnable {
 		for(Entry<String, Double> positionEntry:positions.entrySet()){
 			System.out.println(positionEntry.getKey() + " " + positionEntry.getValue());
 		}
+		System.out.println();
 	}
 }

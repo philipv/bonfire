@@ -42,7 +42,7 @@ public class PositionReceiverTest extends BaseTest{
 	public void testWithWrongInputValues() throws IOException{
 		PositionReceiver positionReceiver = createReceiver();
 		when(factoryUtility.createBufferedReader(any(InputStreamReader.class))).thenReturn(bufferedReader);
-		when(bufferedReader.readLine()).thenReturn("usd 100", "usd :86", "", "dgr", "usd 100", "quit");
+		when(bufferedReader.readLine()).thenReturn("usd 100", "usd :86", "", "dgr", "abcds 2342", "usd 100" , "quit");
 		positionReceiver.initialize(null);
 		assertAggregatedResult("USD", 200);
 	}
