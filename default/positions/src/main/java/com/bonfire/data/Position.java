@@ -1,5 +1,8 @@
 package com.bonfire.data;
 
+/*
+ * Class to represent a position update
+ */
 public class Position {
 	private String currency;
 	private Double value;

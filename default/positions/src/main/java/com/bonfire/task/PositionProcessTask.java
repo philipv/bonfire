@@ -4,6 +4,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.bonfire.data.Position;
 
+/*
+ * Task for processing the position updates
+ */
 public class PositionProcessTask implements Runnable {
 	private Position position;
 	private ConcurrentHashMap<String, Double> positions;

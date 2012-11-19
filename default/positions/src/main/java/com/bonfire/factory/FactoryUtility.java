@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.bonfire.data.Position;
 import com.bonfire.task.PositionProcessTask;
 
+/*
+ * Utility class for creating different types of objects
+ */
 public class FactoryUtility {
 	
 	public Runnable createTaskFromConsole(Position position, ConcurrentHashMap<String, Double> positions){

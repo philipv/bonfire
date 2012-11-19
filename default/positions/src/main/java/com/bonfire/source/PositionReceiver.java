@@ -17,6 +17,12 @@ import com.bonfire.factory.FactoryUtility;
 import com.bonfire.observer.PositionListener;
 import com.bonfire.task.EvaluationTask;
 
+/*
+ * This component is responsible for:
+ *  - Getting the update from different sources.
+ *  - Convert the update into a position
+ *  - Notify the required listeners.
+ */
 public class PositionReceiver extends Observable{
 	private static final int PERIOD = 60;
 	private static final String SEPARATOR = " ";

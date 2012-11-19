@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+/*
+ * Task for printing the aggregated positions
+ */
 public class EvaluationTask implements Runnable {
 	private final ConcurrentHashMap<String, Double> positions;
 

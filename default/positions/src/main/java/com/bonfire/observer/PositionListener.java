@@ -7,6 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.bonfire.data.Position;
 import com.bonfire.factory.FactoryUtility;
 
+/*
+ * This class is responsible for:
+ *  - Creating a task for the update.
+ *  - Process the task in a synchronous or asynchronous manner (we can make it async by passing task to a thread pool)
+ */
 public class PositionListener implements Observer {
 
 	private ConcurrentHashMap<String, Double> positions;
