@@ -21,7 +21,7 @@ Criteria for the input:
  Steps to build and run this application:
  - Unzip the file into a folder.
  - This is an eclipse project so you can import extracted folder as an Eclipse Maven project (will also need m2e plugin in Eclipse). Since this project was created using 
- Eclipse Juno, therefore can have some issues with older versions of Eclipse.
+ Eclipse Juno, therefore can have issues with older versions of Eclipse.
  - Open command line (based on the environment) and go to the folder containing pom.xml
  - Run this command to build and execute the test cases:
  	mvn clean compile install
