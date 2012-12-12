@@ -29,7 +29,7 @@ public class BatchBlockingQueue<T> {
                 putCondition.await();
             batch.add(indexPosition, t);
             if(indexPosition==batchSize)
-                takeCondition.notify();
+                takeCondition.signal();
         }finally{
             lock.unlock();
         }
@@ -43,7 +43,7 @@ public class BatchBlockingQueue<T> {
             ArrayList<T> currentBatch = new ArrayList<T>(batch);
             batch.clear();
             indexPosition = 0;
-            putCondition.notify();
+            putCondition.signal();
             return currentBatch;
         }finally{
             lock.unlock();

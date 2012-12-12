@@ -18,6 +18,7 @@ public class BatchProcessor extends Thread{
         while(!stopProcessor){
             try {
                 List<Runnable> runnables = taskQueue.takeBatch();
+                System.out.println("Got a batch of " + runnables.size());
                 for(Runnable runnable:runnables){
                     runnable.run();
                 }
