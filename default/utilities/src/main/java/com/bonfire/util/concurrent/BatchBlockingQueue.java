@@ -27,7 +27,7 @@ public class BatchBlockingQueue<T> {
         try{
             while(batch.size()==batchSize)
                 putCondition.await();
-            batch.add(indexPosition, t);
+            batch.add(indexPosition++, t);
             if(indexPosition==batchSize)
                 takeCondition.signal();
         }finally{
