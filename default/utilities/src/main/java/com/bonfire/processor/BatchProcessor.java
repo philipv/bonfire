@@ -1,10 +1,8 @@
 package com.bonfire.processor;
 
-import java.util.List;
-
 import com.bonfire.util.concurrent.BatchBlockingQueue;
 
-public class BatchProcessor extends Thread{
+public class BatchProcessor<T extends Runnable> extends Thread{
     
     private volatile boolean stopProcessor;
     private BatchBlockingQueue<Runnable> taskQueue;
@@ -17,10 +15,10 @@ public class BatchProcessor extends Thread{
     public void run(){
         while(!stopProcessor){
             try {
-                List<Runnable> runnables = taskQueue.takeBatch();
-                System.out.println(System.currentTimeMillis() + " - Got batch of " + runnables.size());
-                for(Runnable runnable:runnables){
-                    runnable.run();
+                Object[] runnables = taskQueue.takeBatch();
+                //System.out.println(System.currentTimeMillis() + " - Got batch of " + runnables.length);
+                for(Object runnable:runnables){
+                    ((T)runnable).run();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
