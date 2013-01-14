@@ -2,6 +2,7 @@ package com.bonfire.processor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.SocketException;
 
 public class ReaderThread implements Runnable {
 	private BufferedReader reader;
@@ -16,6 +17,8 @@ public class ReaderThread implements Runnable {
 			while((inputString = reader.readLine())!=null){
 				processUpdate(inputString);
 			}
+		}catch(SocketException socketException){
+			socketException.printStackTrace();
 		}catch(IOException ioException){
 			ioException.printStackTrace();
 		}finally{
@@ -29,5 +32,9 @@ public class ReaderThread implements Runnable {
 	
 	public void processUpdate(String update){
 		System.out.println(update);
+	}
+	
+	public void stopThread() throws IOException{
+		reader.close();
 	}
 }

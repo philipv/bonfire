@@ -5,61 +5,68 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Observable;
-import java.util.Observer;
 
 import com.bonfire.processor.ReaderThread;
 
-public class OldClient implements Observer{
+public class OldClient{
 
 	private Socket clientSocket;
 	private PrintWriter socketWriter;
-	private BufferedReader socketReader;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		OldClient client = new OldClient();
-	}
-	
-	public OldClient(){
-		
+		OldClient client = null;
 		try{
-			BufferedReader consoleReader = null;
-			clientSocket = new Socket("localhost", 8000);
-			socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			
+			client = new OldClient();
+			client.start();
 		}catch(IOException ioException){
 			ioException.printStackTrace();
+		}finally{
+			client.destroy();
 		}
 	}
-	public void start(){
+	
+	public OldClient() throws IOException{
+		clientSocket = new Socket("localhost", 8000);
+		socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+	}
+	
+	public void start() throws IOException{
+		BufferedReader consoleReader = null;
+		Thread readerThread = null;
+		ReaderThread readerRunnable = null;
 		try{
 			consoleReader = new BufferedReader(new InputStreamReader(System.in));
 			String inputString = null;
-			
-			new Thread(new ReaderThread(socketReader)).start();
+			readerRunnable = new ReaderThread(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
+			readerThread = new Thread(readerRunnable);
+			readerThread.start();
 			
 			while((inputString = consoleReader.readLine())!=null){
 				if(inputString.equals("quit"))
 					break;
-				socketWriter.println(inputString);
+				processUpdate(inputString);
 			}
 		}finally{
 			try{
-				socketWriter.close();
-				socketReader.close();
 				consoleReader.close();
 			}catch(IOException ioException){
 				ioException.printStackTrace();
 			}
 		}
 	}
-
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+	
+	public void destroy(){
+		try{
+			clientSocket.close();
+			socketWriter.close();
+		}catch(IOException ioException){
+			ioException.printStackTrace();
+		}
 	}
-
+	
+	public void processUpdate(Object update){
+		socketWriter.println(update);
+	}
 }
