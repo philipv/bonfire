@@ -30,6 +30,8 @@ public class PlaygroundPart {
 
     Button button = new Button(parent, SWT.NONE);
     button.setText("Search");
+    browser = new Browser(parent, SWT.NONE);
+    browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
     button.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -46,9 +48,6 @@ public class PlaygroundPart {
         }
       }
     });
-
-    browser = new Browser(parent, SWT.NONE);
-    browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
   }
 
