@@ -14,5 +14,21 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.bonfire.order.view.selectionset">
+         <with
+               variable="org.eclipse.ui.selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <instanceof
+                     value="com.bonfire.order.view.parts.OverviewPart">
+               </instanceof>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
 
 </plugin>
