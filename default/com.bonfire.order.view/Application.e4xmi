@@ -36,6 +36,10 @@
       <children xsi:type="menu:Menu" xmi:id="_oXIDkGm_EeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu.edit" label="Edit"/>
     </mainMenu>
   </children>
+  <bindingTables xmi:id="_Ffkg8GniEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.window.bindingtable" bindingContext="_-WHK8GnhEeK7EdFiQdWJoA">
+    <bindings xmi:id="_KFuMsGniEeK7EdFiQdWJoA" elementId="SaveBinding" keySequence="M1+S" command="_EQR7wGnAEeK7EdFiQdWJoA"/>
+  </bindingTables>
+  <rootContext xmi:id="_-WHK8GnhEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.window.context" name="WindowContext"/>
   <commands xmi:id="_z216UGkeEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.testCommand" commandName="testCommand">
     <parameters xmi:id="_byiXUGkfEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.commandparameter.input" name="testInput"/>
   </commands>
