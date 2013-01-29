@@ -10,8 +10,4 @@ public class TestHandler {
 	  public void execute(@Named("com.bonfire.order.view.commandparameter.input")String param) {
 	    System.out.println("Calling the testhandler with param : " + param);
 	  }
-	/*@Execute
-	public void execute() {
-		System.out.println("Calling the testhandler");
-	}*/
 }

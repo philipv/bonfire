@@ -25,10 +25,22 @@
         </children>
       </children>
     </children>
+    <handlers xmi:id="_qeqIEGnQEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.handler.exit" contributionURI="bundleclass://com.bonfire.order.view/com.bonfire.order.view.handlers.ExitHandler" command="_41k_wGnPEeK7EdFiQdWJoA"/>
+    <handlers xmi:id="_FfMWMGnREeK7EdFiQdWJoA" elementId="com.bonfire.order.view.handler.save" contributionURI="bundleclass://com.bonfire.order.view/com.bonfire.order.view.handlers.SaveHandler" command="_EQR7wGnAEeK7EdFiQdWJoA"/>
+    <mainMenu xmi:id="_VwOZ4Gm_EeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu">
+      <children xsi:type="menu:Menu" xmi:id="_i77mMGm_EeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu.file" label="File">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_4Z91EGm_EeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu.file.save" label="Save" command="_EQR7wGnAEeK7EdFiQdWJoA"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_NLdwQGnPEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.menuseparator.0"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_N1CRsGnPEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu.file.exit" label="Exit" command="_41k_wGnPEeK7EdFiQdWJoA"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_oXIDkGm_EeK7EdFiQdWJoA" elementId="com.bonfire.order.view.main.menu.edit" label="Edit"/>
+    </mainMenu>
   </children>
   <commands xmi:id="_z216UGkeEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.testCommand" commandName="testCommand">
     <parameters xmi:id="_byiXUGkfEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.commandparameter.input" name="testInput"/>
   </commands>
+  <commands xmi:id="_EQR7wGnAEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.command.saveCommand" commandName="saveCommand"/>
+  <commands xmi:id="_41k_wGnPEeK7EdFiQdWJoA" elementId="com.bonfire.order.view.command.exitCommand" commandName="exitCommand"/>
   <addons xmi:id="_E5S4MWUNEeKgIfu74juIGQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_E5S4MmUNEeKgIfu74juIGQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_E5S4M2UNEeKgIfu74juIGQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
