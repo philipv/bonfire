@@ -24,6 +24,8 @@ public class DetailsPart {
 	    Table table = new Table(parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 	    table.setHeaderVisible(true);
 	    table.setLinesVisible(true);
+	    service.registerContextMenu(table, 
+		        "com.bonfire.order.view.popupmenu.table");
 	    String[] columns = new String[] { "ID", "Side", "Symbol", "Qty",
 	    "Cum Qty" };
 	    String[] data = new String[] { "Order-1", "Buy", "6758.T", "1000",
