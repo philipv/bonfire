@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.SocketException;
 
-public class ReaderThread implements Runnable {
+public class Reader implements Runnable {
 	private BufferedReader reader;
 	
-	public ReaderThread(BufferedReader reader){
+	public Reader(BufferedReader reader){
 		this.reader = reader;
 	}
 	

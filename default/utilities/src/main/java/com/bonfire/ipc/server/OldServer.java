@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.bonfire.processor.ReaderThread;
+import com.bonfire.processor.Reader;
 
 public class OldServer {
 
@@ -21,14 +21,14 @@ public class OldServer {
 			serverSocket = new ServerSocket(8000);
 			while((clientEndPoint = serverSocket.accept()) != null){
 				final Socket endPoint = clientEndPoint;
-				new Thread(new ReaderThread(new BufferedReader(new InputStreamReader(clientEndPoint.getInputStream()))){
+				new Reader(new BufferedReader(new InputStreamReader(clientEndPoint.getInputStream()))){
 					
 					private PrintWriter writer = new PrintWriter(endPoint.getOutputStream(), true);
 					public void processUpdate(String update){
 						System.out.println("Received update: " + update);
 						writer.println("From server: " + update);
 					}
-				}).start();
+				}.run();
 			}
 		}catch(IOException ioException){
 			ioException.printStackTrace();
