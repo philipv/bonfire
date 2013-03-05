@@ -6,40 +6,26 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.bonfire.ipc.OldSocketReader;
 import com.bonfire.processor.Reader;
 
-public class OldClient{
+public class OldClient extends OldSocketReader {
+	
+	protected PrintWriter socketWriter;
+	
+	public OldClient(Socket socket) throws IOException {
+		super(socket);
+		socketWriter = new PrintWriter(socket.getOutputStream(), true);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		socketWriter.close();
+	}
 
-	private Socket clientSocket;
-	private PrintWriter socketWriter;
-	private BufferedReader socketReader;
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		OldClient client = null;
-		try{
-			client = new OldClient();
-			client.start();
-		}catch(IOException ioException){
-			ioException.printStackTrace();
-		}finally{
-			client.destroy();
-		}
-	}
-	
-	public OldClient() throws IOException{
-		clientSocket = new Socket("localhost", 8000);
-		socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-		socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	}
-	
-	public void start() throws IOException{
-		Reader socketReaderTask = null;
-		socketReaderTask = new Reader(socketReader);
-		Thread socketReaderThread = new Thread(socketReaderTask);
-		socketReaderThread.start();
-		
+	public void start(){
+		super.start(null);
 		Reader consoleReaderTask = null;
 		consoleReaderTask = new Reader(new BufferedReader(new InputStreamReader(System.in))){
 			public void processUpdate(String update){
@@ -52,12 +38,18 @@ public class OldClient{
 		consoleReaderTask.run();
 	}
 	
-	public void destroy(){
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		OldClient client = null;
 		try{
-			clientSocket.close();
-			socketWriter.close();
+			client = new OldClient(new Socket("localhost", 8000));
+			client.start();
 		}catch(IOException ioException){
 			ioException.printStackTrace();
+		}finally{
+			client.destroy();
 		}
 	}
 }
