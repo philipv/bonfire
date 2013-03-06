@@ -22,7 +22,7 @@ public class BlockDataPersistenceForPerson {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int personsCount = 1000;
+		int personsCount = 1;
 		String fileName = "PersonsWithNIO.txt";
 		try(/*ByteArrayInputStream bais = new ByteArrayInputStream(new byte[1024]);
 				ObjectInputStream ois = new ObjectInputStream(bais);*/
