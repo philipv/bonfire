@@ -1,10 +1,12 @@
 package nio;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -24,8 +26,8 @@ public class BlockDataPersistenceForPerson {
 	public static void main(String[] args) {
 		int personsCount = 1;
 		String fileName = "PersonsWithNIO.txt";
-		try(/*ByteArrayInputStream bais = new ByteArrayInputStream(new byte[1024]);
-				ObjectInputStream ois = new ObjectInputStream(bais);*/
+		List<Integer> sizes = new ArrayList<>(personsCount);
+		try(
 				FileChannel outFileChannel = new FileOutputStream(fileName).getChannel();
 				FileChannel inFileChannel = new FileInputStream(fileName).getChannel()){
 			List<Person> persons = new ArrayList<>(personsCount);
@@ -41,22 +43,30 @@ public class BlockDataPersistenceForPerson {
 				oos.flush();
 				ByteBuffer byteBuffer = ByteBuffer.wrap(baos.toByteArray());
 				outFileChannel.write(byteBuffer);
+				sizes.add(byteBuffer.limit());
 			}
 			System.out.println("Time taken to write " + personsCount + " persons = " + (System.nanoTime() - startTime));
 			
-			/*for(Person person:persons){
-				Person deserializedPerson = (Person)ois.readObject();
+			int i = 0;
+			for(Person person:persons){
+				ByteBuffer buffer = ByteBuffer.allocate(sizes.get(i));
+				inFileChannel.read(buffer);
+				ByteArrayInputStream bais = new ByteArrayInputStream(buffer.array());
+				ObjectInputStream ois = new ObjectInputStream(bais);
+				Person deserializedPerson = new Person();
+				deserializedPerson.readExternal(ois);
 				if(!person.equals(deserializedPerson)){
 					System.out.println("The objects are not equal");
 				}
-			}*/
+				i++;
+			}
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}/*catch (ClassNotFoundException e) {
+		}catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 	}
 	
