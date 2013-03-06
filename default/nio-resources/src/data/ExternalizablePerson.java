@@ -9,14 +9,14 @@ import util.Externalizer;
 
 public class ExternalizablePerson implements Externalizable{
 
-	private transient String id;
-	private transient int age;
-	private transient String firstName;
-	private transient String lastName;
-	private transient float salary;
-	private transient String address;
-	private transient String contactNumber;
-	private transient boolean married;
+	private String id;
+	private int age;
+	private String firstName;
+	private String lastName;
+	private float salary;
+	private String address;
+	private String contactNumber;
+	private boolean married;
 	
 	public String getId() {
 		return id;
