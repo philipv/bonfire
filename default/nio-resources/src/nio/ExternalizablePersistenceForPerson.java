@@ -56,11 +56,11 @@ public class ExternalizablePersistenceForPerson {
 		ExternalizablePerson person = new ExternalizablePerson();
 		person.setId("Person-" + i);
 		person.setAge(i);
-		person.setFirstName(firstNames[i%firstNames.length]);
-		person.setLastName(lastNames[i%lastNames.length]);
+		person.setFirstName(firstNames[i%firstNames.length] + i);
+		person.setLastName(lastNames[i%lastNames.length] + i);
 		person.setSalary(i * 1000.0f);
-		person.setAddress(addresses[i%addresses.length]);
-		person.setContactNumber("2345678901");
+		person.setAddress(addresses[i%addresses.length] + i);
+		person.setContactNumber((i%2==0?"2345678901":"1234567890") + i);
 		person.setMarried(true);
 		return person;
 	}

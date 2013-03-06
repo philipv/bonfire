@@ -1,5 +1,11 @@
 package data;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import util.Externalizer;
+
 
 public class Person{
 
@@ -90,6 +96,28 @@ public class Person{
 			return false;
 		
 		return married == anotherPerson.isMarried();
+	}
+	
+	public void writeExternal(ObjectOutput out) throws IOException {
+		Externalizer.writeString(out, id);
+		Externalizer.writeInteger(out, age);
+		Externalizer.writeString(out, firstName);
+		Externalizer.writeString(out, lastName);
+		Externalizer.writeFloat(out, salary);
+		Externalizer.writeString(out, address);
+		Externalizer.writeString(out, contactNumber);
+		Externalizer.writeBoolean(out, married);
+	}
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		id = Externalizer.readString(in);
+		age = Externalizer.readInteger(in);
+		firstName = Externalizer.readString(in);
+		lastName = Externalizer.readString(in);
+		salary = Externalizer.readFloat(in);
+		address = Externalizer.readString(in);
+		contactNumber = Externalizer.readString(in);
+		married = Externalizer.readBoolean(in);
 	}
 	
 }

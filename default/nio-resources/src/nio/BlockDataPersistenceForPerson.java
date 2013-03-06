@@ -1,17 +1,19 @@
 package nio;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import data.SerializablePerson;
+import data.Person;
 
-public class NormalFielPersistenceForPerson {
+public class BlockDataPersistenceForPerson {
 
 	private static final String[] firstNames = new String[]{"Zachariah", "Varughese", "Abraham", "Cherian", "Philipose"};
 	private static final String[] lastNames = new String[]{"Philipose", "Cherian", "Abraham", "Varughese", "Zachariah"};
@@ -20,40 +22,46 @@ public class NormalFielPersistenceForPerson {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int personsCount = 1;
-		String fileName = "PersonsWithSerializableNormalIO.txt";
-		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))){
-			List<SerializablePerson> persons = new ArrayList<>(personsCount);
+		int personsCount = 1000;
+		String fileName = "PersonsWithNIO.txt";
+		try(/*ByteArrayInputStream bais = new ByteArrayInputStream(new byte[1024]);
+				ObjectInputStream ois = new ObjectInputStream(bais);*/
+				FileChannel outFileChannel = new FileOutputStream(fileName).getChannel();
+				FileChannel inFileChannel = new FileInputStream(fileName).getChannel()){
+			List<Person> persons = new ArrayList<>(personsCount);
 			for(int i=0;i<personsCount;i++){
 				persons.add(createPerson(i));
 			}
 			
 			long startTime = System.nanoTime();
-			for(SerializablePerson person:persons){
-				oos.writeObject(person);
+			for(Person person:persons){
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(baos);
+				person.writeExternal(oos);
+				oos.flush();
+				ByteBuffer byteBuffer = ByteBuffer.wrap(baos.toByteArray());
+				outFileChannel.write(byteBuffer);
 			}
-			oos.flush();
 			System.out.println("Time taken to write " + personsCount + " persons = " + (System.nanoTime() - startTime));
 			
-			for(SerializablePerson person:persons){
-				SerializablePerson deserializedPerson = (SerializablePerson)ois.readObject();
+			/*for(Person person:persons){
+				Person deserializedPerson = (Person)ois.readObject();
 				if(!person.equals(deserializedPerson)){
 					System.out.println("The objects are not equal");
 				}
-			}
+			}*/
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}catch (ClassNotFoundException e) {
+		}/*catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
-
-	static SerializablePerson createPerson(int i) {
-		SerializablePerson person = new SerializablePerson();
+	
+	private static Person createPerson(int i) {
+		Person person = new Person();
 		person.setId("Person-" + i);
 		person.setAge(i);
 		person.setFirstName(firstNames[i%firstNames.length] + i);
@@ -64,5 +72,5 @@ public class NormalFielPersistenceForPerson {
 		person.setMarried(true);
 		return person;
 	}
-
+	
 }
