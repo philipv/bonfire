@@ -44,6 +44,7 @@ public class BlockDataPersistenceForPerson {
 				ByteBuffer byteBuffer = ByteBuffer.wrap(baos.toByteArray());
 				outFileChannel.write(byteBuffer);
 				sizes.add(byteBuffer.limit());
+				oos.close();
 			}
 			System.out.println("Time taken to write " + personsCount + " persons = " + (System.nanoTime() - startTime));
 			
@@ -58,6 +59,7 @@ public class BlockDataPersistenceForPerson {
 				if(!person.equals(deserializedPerson)){
 					System.out.println("The objects are not equal");
 				}
+				ois.close();
 				i++;
 			}
 		}catch(FileNotFoundException e){
