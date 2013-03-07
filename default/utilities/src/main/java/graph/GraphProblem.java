@@ -53,7 +53,7 @@ public class GraphProblem {
 		return edgesFromVertexIndices;
 	}
 
-	private static char[] getNextEdge(int[] usedEdges, char routeVertex, char[][] edges) {
+	public static char[] getNextEdge(int[] usedEdges, char routeVertex, char[][] edges) {
 		for(int edgeCounter=0;edgeCounter<edges.length;edgeCounter++){
 			if(edges[edgeCounter][0]==routeVertex && !containsElement(usedEdges, edgeCounter))
 				return edges[edgeCounter];
@@ -61,7 +61,7 @@ public class GraphProblem {
 		return null;
 	}
 
-	private static char[] addElement(char[] array, char element){
+	public static char[] addElement(char[] array, char element){
 		if(array==null)
 			return new char[]{element};
 		else{

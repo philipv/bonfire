@@ -156,7 +156,7 @@ public class GraphTraversal {
 	
 	private static Vertex createVertex(Vertex v, char[] edge){
 		if(edge==null || edge.length<3){
-			System.out.println("Invalid edge: " + edge);
+			System.out.println("Invalid edge: " + new String(edge));
 			return null;
 		}
 		v.source = edge[0];
