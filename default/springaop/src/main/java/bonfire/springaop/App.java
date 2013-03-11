@@ -26,6 +26,8 @@ public class App
         	System.out.println("----------------------------------------------------");
         	myTestTarget.getName();
         	System.out.println("----------------------------------------------------");
+        	myTestTarget.echo("hello");
+        	System.out.println("----------------------------------------------------");
 			myTestTarget.getAge("Test");
 		} catch (Exception e) {
 		}

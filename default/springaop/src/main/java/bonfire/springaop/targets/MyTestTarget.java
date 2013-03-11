@@ -15,4 +15,8 @@ public class MyTestTarget {
 		throw new SQLException("Couldn't find age for id " + id);
 	}
 	
+	public String echo(String input){
+		return "MyTestTarget - " + input;
+	}
+	
 }

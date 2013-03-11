@@ -4,9 +4,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
@@ -39,6 +41,14 @@ public class BasicAdvice {
 	public void afterThrowing(JoinPoint joinPoint, SQLException ex){
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterThrowing: Thrown exception " + ex.toString());
 		System.out.println("Another way to get the input parameters : " + Arrays.toString(joinPoint.getArgs()));
+	}
+	
+	@Around("bonfire.springaop.aspects.BasicPointCuts.echoMethod()")
+	public String around(ProceedingJoinPoint pjp) throws Throwable {
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.around : Input :" + Arrays.toString(pjp.getArgs()));
+		String retVal = (String)pjp.proceed();
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.around : Output :" + retVal);
+		return retVal;
 	}
 	
 }

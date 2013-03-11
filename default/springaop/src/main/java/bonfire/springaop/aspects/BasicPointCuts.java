@@ -14,4 +14,6 @@ public class BasicPointCuts {
 	@Pointcut("execution(* bonfire.springaop.targets.*.get*(..))")
 	public void anyGetter(){}
 	
+	@Pointcut("execution(* bonfire.springaop.targets.*.echo(..))")
+	public void echoMethod(){}
 }
