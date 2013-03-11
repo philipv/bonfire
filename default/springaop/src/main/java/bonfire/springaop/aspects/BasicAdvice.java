@@ -40,12 +40,13 @@ public class BasicAdvice {
 			pointcut="bonfire.springaop.aspects.BasicPointCuts.anyGetter()")
 	public void afterThrowing(JoinPoint joinPoint, SQLException ex){
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterThrowing: Thrown exception " + ex.toString());
-		System.out.println("Another way to get the input parameters : " + Arrays.toString(joinPoint.getArgs()));
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterThrowing: Another way to get the input parameters : " + Arrays.toString(joinPoint.getArgs()));
 	}
 	
-	@Around("bonfire.springaop.aspects.BasicPointCuts.echoMethod()")
-	public String around(ProceedingJoinPoint pjp) throws Throwable {
+	@Around("bonfire.springaop.aspects.BasicPointCuts.echoMethod() && args(input)")
+	public String around(ProceedingJoinPoint pjp, String input) throws Throwable {
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.around : Input :" + Arrays.toString(pjp.getArgs()));
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.around : Another way to get the input parameters : " + input);
 		String retVal = (String)pjp.proceed();
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.around : Output :" + retVal);
 		return retVal;
