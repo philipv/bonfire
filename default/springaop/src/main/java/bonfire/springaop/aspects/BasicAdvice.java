@@ -1,7 +1,12 @@
 package bonfire.springaop.aspects;
 
+import java.sql.SQLException;
+import java.util.Arrays;
+
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
@@ -27,6 +32,13 @@ public class BasicAdvice {
 			returning="retVal")
 	public void afterReturning(String retVal){
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterReturning: Got value : " + retVal);
+	}
+	
+	@AfterThrowing(throwing="ex", 
+			pointcut="bonfire.springaop.aspects.BasicPointCuts.anyGetter()")
+	public void afterThrowing(JoinPoint joinPoint, SQLException ex){
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterThrowing: Thrown exception " + ex.toString());
+		System.out.println("Another way to get the input parameters : " + Arrays.toString(joinPoint.getArgs()));
 	}
 	
 }
