@@ -13,7 +13,8 @@
     xmlns:aop="http://www.springframework.org/schema/aop">
        <aop:aspectj-autoproxy/>
        
-       <bean id="basicAspect" class="bonfire.springaop.aspects.BasicAspect"></bean>
+       <bean id="basicPointCuts" class="bonfire.springaop.aspects.BasicPointCuts"></bean>
        <bean id="basicAdvice" class="bonfire.springaop.aspects.BasicAdvice"></bean>
        <bean id="myBasicTarget" class="bonfire.springaop.targets.MyTestTarget"></bean>
+       <bean name="mySaveTarget" class="bonfire.springaop.targets.MySaveTarget"></bean>
 </beans>
