@@ -5,4 +5,8 @@ public class MyTestTarget {
 		System.out.println("bonfire.springaop.targets.MyTestTarget.transfer called");
 	}
 	
+	public String getName(){
+		return "TestName";
+	}
+	
 }

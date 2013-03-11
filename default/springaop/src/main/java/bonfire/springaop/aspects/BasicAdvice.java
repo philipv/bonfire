@@ -1,6 +1,7 @@
 package bonfire.springaop.aspects;
 
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
@@ -20,6 +21,12 @@ public class BasicAdvice {
 	@Before("bonfire.springaop.aspects.BasicPointCuts.anyMySaveTargetMethod()")
 	public void beforeWithin() {
 		System.out.println("bonfire.springaop.aspects.BasicAdvice.beforeWithin");
+	}
+	
+	@AfterReturning(pointcut="bonfire.springaop.aspects.BasicPointCuts.anyGetter()",
+			returning="retVal")
+	public void afterReturning(String retVal){
+		System.out.println("bonfire.springaop.aspects.BasicAdvice.afterReturning: Got value : " + retVal);
 	}
 	
 }

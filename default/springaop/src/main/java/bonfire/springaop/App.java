@@ -17,6 +17,9 @@ public class App
         BeanFactory factory = new ClassPathXmlApplicationContext("classpath:basic.xml");
         MyTestTarget myTestTarget = (MyTestTarget)factory.getBean("myBasicTarget");
         myTestTarget.transfer();
+        System.out.println("----------------------------------------------------");
+        myTestTarget.getName();
+        System.out.println("----------------------------------------------------");
         
         MySaveTarget mySaveTarget = (MySaveTarget)factory.getBean("mySaveTarget");
         mySaveTarget.save();

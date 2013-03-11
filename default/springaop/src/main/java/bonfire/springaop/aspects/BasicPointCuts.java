@@ -11,4 +11,7 @@ public class BasicPointCuts {
 	@Pointcut("within(bonfire.springaop.targets.MySaveTarget)")
 	public void anyMySaveTargetMethod(){}
 	
+	@Pointcut("execution(* bonfire.springaop.targets.*.get*(..))")
+	public void anyGetter(){}
+	
 }
