@@ -2,9 +2,14 @@ package bonfire.springaop.targets;
 
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 public class MyTestTarget {
+	
+	private static final Logger logger = Logger.getLogger(MyTestTarget.class.getCanonicalName());
+	
 	public void transfer(){
-		System.out.println("bonfire.springaop.targets.MyTestTarget.transfer called");
+		logger.info("transfer called");
 	}
 	
 	public String getName(){

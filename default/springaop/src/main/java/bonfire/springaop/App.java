@@ -2,6 +2,7 @@ package bonfire.springaop;
 
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -14,20 +15,21 @@ import bonfire.springaop.targets.MyTestTarget;
  */
 public class App 
 {
-    public static void main( String[] args )
+    private static final Logger logger = Logger.getLogger(App.class.getCanonicalName());
+	public static void main( String[] args )
     {
         try {
         	BeanFactory factory = new ClassPathXmlApplicationContext("classpath:basic.xml");
         	MyTestTarget myTestTarget = (MyTestTarget)factory.getBean("myBasicTarget");
         	myTestTarget.transfer();
-        	System.out.println("----------------------------------------------------");
+        	logger.info("----------------------------------------------------");
         	MySaveTarget mySaveTarget = (MySaveTarget)factory.getBean("mySaveTarget");
         	mySaveTarget.save();
-        	System.out.println("----------------------------------------------------");
+        	logger.info("----------------------------------------------------");
         	myTestTarget.getName();
-        	System.out.println("----------------------------------------------------");
+        	logger.info("----------------------------------------------------");
         	myTestTarget.echo("hello");
-        	System.out.println("----------------------------------------------------");
+        	logger.info("----------------------------------------------------");
 			myTestTarget.getAge("Test");
 		} catch (Exception e) {
 		}
