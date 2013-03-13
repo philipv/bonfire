@@ -1,8 +1,7 @@
 package bonfire.springaop;
 
-import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,7 +14,7 @@ import bonfire.springaop.targets.MyTestTarget;
  */
 public class App 
 {
-    private static final Logger logger = Logger.getLogger(App.class.getCanonicalName());
+    private static final Logger logger = LoggerFactory.getLogger(App.class.getCanonicalName());
 	public static void main( String[] args )
     {
         try {
