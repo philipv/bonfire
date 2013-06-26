@@ -1,9 +1,11 @@
 package profit;
 
+import java.util.Arrays;
+
 public class MaximizeProfit {
 
 	public static void main(String[] args){
-		int[] openPrices = new int[]{6, 2, 1, 5, 1, 4, 3};
+		int[] openPrices = new int[]{2, 1, 1, 7, 3};
 		 HistoricData[] generatedData = new HistoricData[openPrices.length];
 		 for(int i=0;i<openPrices.length;i++){
 			 generatedData[i] = new HistoricData();
@@ -12,24 +14,36 @@ public class MaximizeProfit {
 		 }
 		 
 		 HistoricData[] result = maximizeProfit(generatedData);
+		 System.out.println(Arrays.toString(result));
+		 System.out.println("Profit = " + (result[1].openPrice - result[0].openPrice));
 	}
 	
 	private static HistoricData[] maximizeProfit(HistoricData[] generatedData) {
-		if(generatedData.length == 2)
-			return generatedData;
-		else{
-			int halfIndex = generatedData.length/2;
-			HistoricData[] firstHalf = new HistoricData[halfIndex];
-			System.arraycopy(generatedData, 0, firstHalf, 0, halfIndex);
-			HistoricData[] secondHalf = new HistoricData[generatedData.length - halfIndex];
-			System.arraycopy(generatedData, halfIndex, secondHalf, 0, generatedData.length - halfIndex);
-			
+		HistoricData[] result = null;
+		//int profit = 0;
+		for(HistoricData datum:generatedData){
+			if(result == null){
+				result = new HistoricData[2];
+				result[0] = datum;
+				result[1] = datum;
+			}else{
+				if(result[0].openPrice>datum.openPrice){
+					result[0] = datum;
+					result[1] = datum;
+				}
+				if(result[1].openPrice<datum.openPrice)
+					result[1] = datum;
+			}
 		}
-		return null;
+		return result;
 	}
 
 	static class HistoricData{
 		int relativeDay; //from the start
 		int openPrice;
+		
+		public String toString(){
+			return "Day No. = " + relativeDay + " openPrice = " + openPrice;
+		}
 	}
 }
