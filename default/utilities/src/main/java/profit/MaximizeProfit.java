@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class MaximizeProfit {
 
 	public static void main(String[] args){
-		int[] openPrices = new int[]{2, 1, 1, 7, 3};
+		int[] openPrices = new int[]{10, 1, 2, 6, 3};
 		 HistoricData[] generatedData = new HistoricData[openPrices.length];
 		 for(int i=0;i<openPrices.length;i++){
 			 generatedData[i] = new HistoricData();
@@ -19,21 +19,24 @@ public class MaximizeProfit {
 	}
 	
 	private static HistoricData[] maximizeProfit(HistoricData[] generatedData) {
-		HistoricData[] result = null;
-		//int profit = 0;
-		for(HistoricData datum:generatedData){
-			if(result == null){
-				result = new HistoricData[2];
-				result[0] = datum;
-				result[1] = datum;
-			}else{
-				if(result[0].openPrice>datum.openPrice){
-					result[0] = datum;
-					result[1] = datum;
-				}
-				if(result[1].openPrice<datum.openPrice)
-					result[1] = datum;
+		HistoricData[] result = new HistoricData[]{generatedData[0], generatedData[0]};
+		HistoricData[] currentData = new HistoricData[]{generatedData[0], generatedData[0]};
+		int profit = 0;
+		for(int i=1;i<generatedData.length;i++){
+			if(result[0].openPrice>generatedData[i].openPrice){
+				currentData[0] = generatedData[i];
+				currentData[1] = generatedData[i];
+			}else if(result[1].openPrice<generatedData[i].openPrice)
+				currentData[1] = generatedData[i];
+			
+			if(profit<currentData[1].openPrice - result[0].openPrice){
+				result[1] = currentData[1];
+				profit = result[i].openPrice - result[0].openPrice;
+			}else if(profit<currentData[1].openPrice - currentData[0].openPrice){
+				result = currentData;
+				profit = result[i].openPrice - result[0].openPrice;
 			}
+			
 		}
 		return result;
 	}
