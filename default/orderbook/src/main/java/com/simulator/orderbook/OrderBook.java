@@ -21,7 +21,7 @@ public class OrderBook {
 		this.asks = asks;
 	}
 	
-	public List<Trade> match(Quote newQuote){
+	public List<Trade> add(Quote newQuote){
 		SortedMap<Double, List<Quote>> matchablePriceLevels = new TreeMap<>();
 		switch(newQuote.getSide()){
 			case B:
