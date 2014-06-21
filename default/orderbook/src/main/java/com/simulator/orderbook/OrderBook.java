@@ -31,7 +31,9 @@ public class OrderBook {
 				matchablePriceLevels = bids.headMap(newQuote.getPrice());
 				break;
 		}
-		return match(newQuote, matchablePriceLevels);
+		List<Trade> trades = match(newQuote, matchablePriceLevels);
+		placeQuote(newQuote);
+		return trades;
 	}
 
 	private List<Trade> match(Quote newQuote, SortedMap<Double, List<Quote>> matchablePriceLevels) {
@@ -75,5 +77,28 @@ public class OrderBook {
 		}
 		
 		return trades;
+	}
+	
+	private void placeQuote(Quote newQuote){
+		if(newQuote.getQuantity()>0){
+			switch (newQuote.getSide()) {
+				case B:
+					placeQuote(newQuote, bids);
+					break;
+				case S:
+					placeQuote(newQuote, asks);
+					break;
+			}
+		}
+	}
+
+	private void placeQuote(Quote newQuote,
+			TreeMap<Double, List<Quote>> targetBook) {
+		List<Quote> quotesOnBook = targetBook.get(newQuote.getPrice());
+		if(quotesOnBook==null){
+			quotesOnBook = new LinkedList<>();
+			targetBook.put(newQuote.getPrice(), quotesOnBook);
+		}
+		quotesOnBook.add(newQuote);
 	}
 }
