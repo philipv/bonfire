@@ -1,4 +1,4 @@
-package com.simulator.orderbook;
+package com.simulator.orderbook.util;
 
 import java.util.Comparator;
 

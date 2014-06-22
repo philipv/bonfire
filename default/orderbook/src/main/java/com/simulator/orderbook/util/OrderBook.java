@@ -1,10 +1,9 @@
-package com.simulator.orderbook;
+package com.simulator.orderbook.util;
 
 import java.util.List;
 
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Trade;
-import com.simulator.orderbook.util.MarketDepth;
 
 public class OrderBook {
 	private MarketDepth bids;

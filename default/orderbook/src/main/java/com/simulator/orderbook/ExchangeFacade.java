@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Trade;
+import com.simulator.orderbook.util.OrderBook;
 
 public class ExchangeFacade {
 	

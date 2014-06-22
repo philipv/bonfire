@@ -5,10 +5,6 @@ public class Trade {
 	private Integer quantity;
 	private Double price;
 
-	public Trade() {
-		super();
-	}
-
 	public Integer getQuantity() {
 		return quantity;
 	}

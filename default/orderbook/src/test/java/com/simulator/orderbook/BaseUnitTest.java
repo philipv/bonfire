@@ -1,14 +1,20 @@
 package com.simulator.orderbook;
 
-import java.util.Iterator;
-
 import com.simulator.orderbook.data.Quote;
+import com.simulator.orderbook.data.Side;
+
 
 public class BaseUnitTest {
-	protected Iterator<Quote> createMockIterator(){
-		return null;
+	protected Quote createQuote(double price, int quantity){
+		Quote quote = new Quote();
+		quote.setPrice(price);
+		quote.setQuantity(quantity);
+		return quote;
 	}
 	
-	
-	
+	protected Quote createQuote(double price, int quantity, Side side){
+		Quote quote = createQuote(price, quantity);
+		quote.setSide(side);
+		return quote;
+	}
 }

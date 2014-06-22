@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.simulator.orderbook.BaseUnitTest;
-import com.simulator.orderbook.ReverseComparator;
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Trade;
 
@@ -132,13 +131,6 @@ public class MarketDepthTest extends BaseUnitTest{
 				marketDepth.placeQuote(createQuote(buyPrices[i], quantity));
 			}
 		}
-	}
-	
-	private Quote createQuote(double price, int quantity){
-		Quote quote = new Quote();
-		quote.setPrice(price);
-		quote.setQuantity(quantity);
-		return quote;
 	}
 	
 	private void assertTradeDetails(List<Trade> trades, double[] expectedPrices, int[] expectedQuantities){
