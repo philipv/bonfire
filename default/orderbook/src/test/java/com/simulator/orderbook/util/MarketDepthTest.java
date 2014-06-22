@@ -113,6 +113,19 @@ public class MarketDepthTest extends BaseUnitTest{
 		assertDepth(new double[]{10.0, 9.9}, new int[][]{{50}, {1000}}, depth);
 	}
 	
+	@Test
+	public void matchBuyQuoteOnMultipleQuotesOnSamePriceLevelWithResidual(){
+		depth = new TreeMap<>();
+		marketDepth = new MarketDepth(depth);
+		
+		double[] sellPricesInBook = new double[]{10, 9.9};
+		int[][] sellQuantitiesInBook = new int[][]{{1000}, {10, 260}};
+		populateBook(sellPricesInBook, sellQuantitiesInBook);
+		List<Trade> trades = marketDepth.match(createQuote(9.9, 200));
+		assertTradeDetails(trades, new double[]{9.9, 9.9}, new int[]{10, 190});
+		assertDepth(new double[]{9.9, 10.0}, new int[][]{{70}, {1000}}, depth);
+	}
+	
 	private void populateBook(double[] buyPrices, int[][] buyQuantities) {
 		for(int i=0;i<buyPrices.length;i++){
 			for(int quantity:buyQuantities[i]){
