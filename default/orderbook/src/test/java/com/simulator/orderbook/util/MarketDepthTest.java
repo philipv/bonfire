@@ -34,29 +34,9 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] buyQuantities = new int[][]{{100, 10}, {1000}, {100}};
 		
 		populateBook(buyPricesInDesc, buyQuantities);
-		
-		Assert.assertEquals(3, depth.size());
-		
-		Set<Entry<Double, List<Quote>>> priceLevels = depth.entrySet();
-		
-		int i=0;
-		for(Entry<Double, List<Quote>> priceLevel:priceLevels){
-			List<Quote> quotes = priceLevel.getValue();
-			Assert.assertEquals(buyPricesInDesc[i], priceLevel.getKey(), 0.0001);
-			
-			Assert.assertNotNull(quotes);
-			Assert.assertEquals(buyQuantities[i].length, quotes.size());
-			for(int j=0;j<buyQuantities[i].length;j++){
-				Quote quote = quotes.get(j);
-				Assert.assertNotNull(quote);
-				Assert.assertEquals(buyPricesInDesc[i], quote.getPrice(), 0.0001);
-				Assert.assertEquals(buyQuantities[i][j], quote.getQuantity().intValue());
-			}
-			i++;
-		}
-		Assert.assertEquals(3, i);
+		assertDepth(buyPricesInDesc, buyQuantities, depth);
 	}
-	
+
 	@Test
 	public void placeSellQuote(){
 		depth = new TreeMap<>();
@@ -65,27 +45,7 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] sellQuantities = new int[][]{{100, 10}, {1000}};
 		
 		populateBook(sellPricesInAsc, sellQuantities);
-		
-		Assert.assertEquals(2, depth.size());
-		
-		Set<Entry<Double, List<Quote>>> priceLevels = depth.entrySet();
-		
-		int i=0;
-		for(Entry<Double, List<Quote>> priceLevel:priceLevels){
-			List<Quote> quotes = priceLevel.getValue();
-			Assert.assertEquals(sellPricesInAsc[i], priceLevel.getKey(), 0.0001);
-			
-			Assert.assertNotNull(quotes);
-			Assert.assertEquals(sellQuantities[i].length, quotes.size());
-			for(int j=0;j<sellQuantities[i].length;j++){
-				Quote quote = quotes.get(j);
-				Assert.assertNotNull(quote);
-				Assert.assertEquals(sellPricesInAsc[i], quote.getPrice(), 0.0001);
-				Assert.assertEquals(sellQuantities[i][j], quote.getQuantity().intValue());
-			}
-			i++;
-		}
-		Assert.assertEquals(2, i);
+		assertDepth(sellPricesInAsc, sellQuantities, depth);
 	}
 
 	@Test
@@ -97,15 +57,8 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] buyQuantitiesInBook = new int[][]{{1000}, {100}};
 		populateBook(buyPricesInBook, buyQuantitiesInBook);
 		List<Trade> trades = marketDepth.match(createQuote(9.9, 50));
-		Assert.assertNotNull(trades);
-		Assert.assertEquals(1, trades.size());
-		Trade trade = trades.get(0);
-		Assert.assertEquals(50, trade.getQuantity().intValue());
-		Assert.assertEquals(10, trade.getPrice(), 0.0001);
-		List<Quote> priceLevel = depth.get(trade.getPrice());
-		Assert.assertNotNull(priceLevel);
-		Assert.assertEquals(1, priceLevel.size());
-		Assert.assertEquals(950, priceLevel.get(0).getQuantity().intValue());
+		assertTradeDetails(trades, new double[]{10.0}, new int[]{50});
+		assertDepth(buyPricesInBook, new int[][]{{950}, {100}}, depth);
 	}
 	
 	@Test
@@ -117,15 +70,8 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] sellQuantitiesInBook = new int[][]{{1000}, {200}};
 		populateBook(sellPricesInBook, sellQuantitiesInBook);
 		List<Trade> trades = marketDepth.match(createQuote(10.0, 50));
-		Assert.assertNotNull(trades);
-		Assert.assertEquals(1, trades.size());
-		Trade trade = trades.get(0);
-		Assert.assertEquals(50, trade.getQuantity().intValue());
-		Assert.assertEquals(9.9, trade.getPrice(), 0.0001);
-		List<Quote> priceLevel = depth.get(trade.getPrice());
-		Assert.assertNotNull(priceLevel);
-		Assert.assertEquals(1, priceLevel.size());
-		Assert.assertEquals(150, priceLevel.get(0).getQuantity().intValue());
+		assertTradeDetails(trades, new double[]{9.9}, new int[]{50});
+		assertDepth(new double[]{9.9, 10.0}, new int[][]{{150}, {1000}}, depth);
 	}
 	
 	@Test
@@ -137,22 +83,21 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] buyQuantitiesInBook = new int[][]{{100}, {1000}};
 		populateBook(buyPricesInBook, buyQuantitiesInBook);
 		List<Trade> trades = marketDepth.match(createQuote(9.9, 200));
-		Assert.assertNotNull(trades);
-		Assert.assertEquals(2, trades.size());
-		Trade trade1 = trades.get(0);
-		Assert.assertEquals(100, trade1.getQuantity().intValue());
-		Assert.assertEquals(10, trade1.getPrice(), 0.0001);
+		assertTradeDetails(trades, new double[]{10.0, 9.9}, new int[]{100, 100});
+		assertDepth(new double[]{9.9}, new int[][]{{900}}, depth);
+	}
+	
+	@Test
+	public void matchBuyQuoteOnMultiplePriceLevelWithResidual(){
+		depth = new TreeMap<>();
+		marketDepth = new MarketDepth(depth);
 		
-		Trade trade2 = trades.get(1);
-		Assert.assertEquals(100, trade2.getQuantity().intValue());
-		Assert.assertEquals(9.9, trade2.getPrice(), 0.0001);
-		
-		Assert.assertNull(depth.get(trade1.getPrice()));
-		
-		List<Quote> priceLevel = depth.get(trade2.getPrice());
-		Assert.assertNotNull(priceLevel);
-		Assert.assertEquals(1, priceLevel.size());
-		Assert.assertEquals(900, priceLevel.get(0).getQuantity().intValue());
+		double[] sellPricesInBook = new double[]{10.0, 9.9};
+		int[][] sellQuantitiesInBook = new int[][]{{1000}, {200}};
+		populateBook(sellPricesInBook, sellQuantitiesInBook);
+		List<Trade> trades = marketDepth.match(createQuote(10.0, 250));
+		assertTradeDetails(trades, new double[]{9.9, 10.0}, new int[]{200, 50});
+		assertDepth(new double[]{10.0}, new int[][]{{950}}, depth);
 	}
 	
 	@Test
@@ -164,24 +109,8 @@ public class MarketDepthTest extends BaseUnitTest{
 		int[][] buyQuantitiesInBook = new int[][]{{100, 150}, {1000}};
 		populateBook(buyPricesInBook, buyQuantitiesInBook);
 		List<Trade> trades = marketDepth.match(createQuote(9.9, 200));
-		Assert.assertNotNull(trades);
-		Assert.assertEquals(2, trades.size());
-		Trade trade1 = trades.get(0);
-		Assert.assertEquals(100, trade1.getQuantity().intValue());
-		Assert.assertEquals(10, trade1.getPrice(), 0.0001);
-		
-		Trade trade2 = trades.get(1);
-		Assert.assertEquals(100, trade2.getQuantity().intValue());
-		Assert.assertEquals(10, trade2.getPrice(), 0.0001);
-		
-		Assert.assertEquals(trade1.getPrice(), trade2.getPrice());
-		
-		Assert.assertNotNull(depth.get(trade1.getPrice()));
-		
-		List<Quote> priceLevel = depth.get(trade2.getPrice());
-		Assert.assertNotNull(priceLevel);
-		Assert.assertEquals(1, priceLevel.size());
-		Assert.assertEquals(50, priceLevel.get(0).getQuantity().intValue());
+		assertTradeDetails(trades, new double[]{10, 10}, new int[]{100, 100});
+		assertDepth(new double[]{10.0, 9.9}, new int[][]{{50}, {1000}}, depth);
 	}
 	
 	private void populateBook(double[] buyPrices, int[][] buyQuantities) {
@@ -197,5 +126,38 @@ public class MarketDepthTest extends BaseUnitTest{
 		quote.setPrice(price);
 		quote.setQuantity(quantity);
 		return quote;
+	}
+	
+	private void assertTradeDetails(List<Trade> trades, double[] expectedPrices, int[] expectedQuantities){
+		Assert.assertTrue(expectedPrices.length==expectedQuantities.length);
+		Assert.assertNotNull(trades);
+		Assert.assertTrue(expectedPrices.length==trades.size());
+		for(int i=0; i<expectedPrices.length;i++){
+			Trade trade = trades.get(i);
+			Assert.assertNotNull(trade);
+			Assert.assertEquals(expectedPrices[i],trade.getPrice(), 0.0001);
+			Assert.assertEquals(expectedQuantities[i], trade.getQuantity().intValue());
+		}
+	}
+	
+	private void assertDepth(double[] sortedExpectedPrices, int[][] quantities,
+			TreeMap<Double, List<Quote>> depth) {
+		Assert.assertEquals(sortedExpectedPrices.length, depth.size());
+		Set<Entry<Double, List<Quote>>> priceLevels = depth.entrySet();
+		int i=0;
+		for(Entry<Double, List<Quote>> priceLevel:priceLevels){
+			Assert.assertEquals(sortedExpectedPrices[i], priceLevel.getKey(), 0.0001);
+
+			List<Quote> quotes = priceLevel.getValue();
+			Assert.assertNotNull(quotes);
+			Assert.assertEquals(quantities[i].length, quotes.size());
+			for(int j=0;j<quantities[i].length;j++){
+				Quote quote = quotes.get(j);
+				Assert.assertNotNull(quote);
+				Assert.assertEquals(sortedExpectedPrices[i], quote.getPrice(), 0.0001);
+				Assert.assertEquals(quantities[i][j], quote.getQuantity().intValue());
+			}
+			i++;
+		}
 	}
 }
