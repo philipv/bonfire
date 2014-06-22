@@ -18,30 +18,32 @@ public class MarketDepth {
 	}
 	
 	public List<Trade> match(Quote newQuote) {
-		SortedMap<Double, List<Quote>> matchablePriceLevels = depth.headMap(newQuote.getPrice());
+		SortedMap<Double, List<Quote>> matchablePriceLevels = depth.headMap(newQuote.getPrice(), true);
 		List<Trade> trades = new LinkedList<>();
 		Iterator<Entry<Double, List<Quote>>> priceLevelsIterator = matchablePriceLevels.entrySet().iterator();
 		while(priceLevelsIterator.hasNext()){
 			
 			if(newQuote.getQuantity()>0){
 				Entry<Double, List<Quote>> priceLevel = priceLevelsIterator.next();
-				List<Quote> quotesOnBook = priceLevel.getValue();
-				Iterator<Quote> quotesOnBookIterator = quotesOnBook.iterator();
+				List<Quote> quotesOnPriceLevel = priceLevel.getValue();
+				Iterator<Quote> quotesOnPriceLevelIterator = quotesOnPriceLevel.iterator();
 				
-				while(quotesOnBookIterator.hasNext()){
-					
+				while(quotesOnPriceLevelIterator.hasNext()){
 					if(newQuote.getQuantity()>0){
-						Quote quoteOnBook = quotesOnBookIterator.next();
+						Quote quoteOnPriceLevel = quotesOnPriceLevelIterator.next();
 						trades.add(generateTrade(newQuote, priceLevel.getKey(),
-								quotesOnBookIterator, quoteOnBook));
+								quotesOnPriceLevelIterator, quoteOnPriceLevel));
+					}else{
+						break;
 					}
 				}
 				
-				if(quotesOnBook.size()==0){
+				if(quotesOnPriceLevel.size()==0){
 					priceLevelsIterator.remove();
 				}
+			}else{
+				break;
 			}
-			
 		}
 		
 		return trades;
