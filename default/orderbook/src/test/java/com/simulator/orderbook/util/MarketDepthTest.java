@@ -49,7 +49,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 
 	@Test
-	public void matchSellQuoteWithResidual(){
+	public void matchSellQuoteWithResidualOnDepth(){
 		depth = new TreeMap<>(new ReverseComparator<Double>());
 		marketDepth = new MarketDepth(depth);
 		
@@ -62,7 +62,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void matchBuyQuoteWithResidual(){
+	public void matchBuyQuoteWithResidualOnDepth(){
 		depth = new TreeMap<>();
 		marketDepth = new MarketDepth(depth);
 		
@@ -75,7 +75,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void matchSellQuoteOnMultiplePriceLevelWithResidual(){
+	public void matchSellQuoteOnMultiplePriceLevelWithResidualOnDepth(){
 		depth = new TreeMap<>(new ReverseComparator<Double>());
 		marketDepth = new MarketDepth(depth);
 		
@@ -88,7 +88,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void matchBuyQuoteOnMultiplePriceLevelWithResidual(){
+	public void matchBuyQuoteOnMultiplePriceLevelWithResidualOnDepth(){
 		depth = new TreeMap<>();
 		marketDepth = new MarketDepth(depth);
 		
@@ -101,7 +101,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void matchSellQuoteOnMultipleQuotesOnSamePriceLevelWithResidual(){
+	public void matchSellQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
 		depth = new TreeMap<>(new ReverseComparator<Double>());
 		marketDepth = new MarketDepth(depth);
 		
@@ -114,7 +114,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void matchBuyQuoteOnMultipleQuotesOnSamePriceLevelWithResidual(){
+	public void matchBuyQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
 		depth = new TreeMap<>();
 		marketDepth = new MarketDepth(depth);
 		
