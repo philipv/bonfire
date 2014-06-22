@@ -4,6 +4,7 @@ public class Trade {
 
 	private Integer quantity;
 	private Double price;
+	private String symbol;
 
 	public Integer getQuantity() {
 		return quantity;
@@ -21,10 +22,19 @@ public class Trade {
 		this.price = price;
 	}
 
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getQuantity())
+		sb.append(symbol!=null? symbol + " " :"")
+		.append(getQuantity())
 		.append("@")
 		.append(getPrice());
 		return sb.toString();

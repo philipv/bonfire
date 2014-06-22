@@ -18,6 +18,9 @@ public class MarketDepth {
 	}
 	
 	public List<Trade> match(Quote newQuote) {
+		if(newQuote.getPrice()==null || newQuote.getQuantity()==null){
+			throw new IllegalArgumentException("Wrong quote inputted (" + newQuote + ")");
+		}
 		SortedMap<Double, List<Quote>> matchablePriceLevels = depth.headMap(newQuote.getPrice(), true);
 		List<Trade> trades = new LinkedList<>();
 		Iterator<Entry<Double, List<Quote>>> priceLevelsIterator = matchablePriceLevels.entrySet().iterator();
