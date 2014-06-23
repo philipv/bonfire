@@ -69,6 +69,7 @@ public class OrderBookTest extends BaseUnitTest{
 		Quote quote = createQuote(10.9, 250, null);
 		try{
 			orderBook.match(quote);
+			Assert.fail("should not reach this point");
 		}catch(Exception e){
 			Assert.assertTrue(e instanceof IllegalArgumentException);
 		}

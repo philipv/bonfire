@@ -39,7 +39,4 @@ public class Trade {
 		.append(getPrice());
 		return sb.toString();
 	}
-	
-	
-
 }

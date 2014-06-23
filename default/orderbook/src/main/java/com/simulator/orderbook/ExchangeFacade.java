@@ -3,9 +3,11 @@ package com.simulator.orderbook;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.PriorityQueue;
 
 import com.simulator.orderbook.data.Quote;
+import com.simulator.orderbook.data.Sequenceable;
+import com.simulator.orderbook.data.Side;
 import com.simulator.orderbook.data.Trade;
 import com.simulator.orderbook.exception.ProcessingFailedException;
 import com.simulator.orderbook.util.MarketDepth;
@@ -26,8 +28,8 @@ public class ExchangeFacade {
 			if(newQuote!=null){
 				OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
 				if(orderBook==null){
-					orderBook = new OrderBook(new MarketDepth(new TreeMap<Double, List<Quote>>(new ReverseComparator<Double>())), 
-							new MarketDepth(new TreeMap<Double, List<Quote>>()));
+					orderBook = new OrderBook(new MarketDepth(new PriorityQueue<Sequenceable<Quote>>(16, new ReverseComparator<Sequenceable<Quote>>()), Side.B), 
+							new MarketDepth(new PriorityQueue<Sequenceable<Quote>>(), Side.S));
 					orderBooks.put(newQuote.getSymbol(), orderBook);
 				}
 				
