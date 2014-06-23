@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Sequenceable;
 import com.simulator.orderbook.data.Side;
 import com.simulator.orderbook.data.Trade;
 import com.simulator.orderbook.exception.ProcessingFailedException;
 import com.simulator.orderbook.util.MarketDepth;
+import com.simulator.orderbook.util.NormalComparator;
 import com.simulator.orderbook.util.OrderBook;
 import com.simulator.orderbook.util.ReverseComparator;
 
@@ -28,8 +28,8 @@ public class ExchangeFacade {
 			if(newQuote!=null){
 				OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
 				if(orderBook==null){
-					orderBook = new OrderBook(new MarketDepth(new PriorityQueue<Sequenceable<Quote>>(16, new ReverseComparator<Sequenceable<Quote>>()), Side.B), 
-							new MarketDepth(new PriorityQueue<Sequenceable<Quote>>(), Side.S));
+					orderBook = new OrderBook(new MarketDepth(new PriorityQueue<>(16, new ReverseComparator<>()), Side.B), 
+							new MarketDepth(new PriorityQueue<>(16, new NormalComparator<>()), Side.S));
 					orderBooks.put(newQuote.getSymbol(), orderBook);
 				}
 				

@@ -27,7 +27,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void placeBuyQuote(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<Sequenceable<Quote>>());
+		depth = new PriorityQueue<>(16, new ReverseComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		double[] buyPricesInDesc = new double[]{10.1, 10, 9.9};
 		int[][] buyQuantities = new int[][]{{100, 10}, {1000}, {100}};
@@ -49,7 +49,7 @@ public class MarketDepthTest extends BaseUnitTest{
 
 	@Test
 	public void matchSellQuoteWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<Sequenceable<Quote>>());
+		depth = new PriorityQueue<>(16, new ReverseComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
@@ -101,7 +101,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchSellQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<Sequenceable<Quote>>());
+		depth = new PriorityQueue<>(16, new ReverseComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
