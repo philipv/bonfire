@@ -11,6 +11,7 @@ import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Trade;
 import com.simulator.exception.ProcessingFailedException;
+import com.simulator.factory.FactoryUtility;
 import com.simulator.orderbook.OrderBook;
 
 public class AsyncParallelProcessor {
@@ -24,7 +25,7 @@ public class AsyncParallelProcessor {
 		setSingleThreadedExecutors(new ExecutorService[cores]);
 		
 		for(int i=0;i<cores;i++){
-			marketProcessors[i] = new MarketProcessor(new HashMap<String, OrderBook>());
+			marketProcessors[i] = new MarketProcessor(new HashMap<String, OrderBook>(),new FactoryUtility());
 			singleThreadedExecutors[i] = Executors.newSingleThreadExecutor();
 		}
 	}

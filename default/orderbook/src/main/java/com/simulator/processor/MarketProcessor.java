@@ -1,30 +1,27 @@
 package com.simulator.processor;
 
 import java.util.Map;
-import java.util.PriorityQueue;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
-import com.simulator.data.Side;
 import com.simulator.exception.ProcessingFailedException;
+import com.simulator.factory.FactoryUtility;
 import com.simulator.orderbook.OrderBook;
-import com.simulator.util.AscendingComparator;
-import com.simulator.util.DescendingComparator;
-import com.simulator.util.MarketDepth;
 public class MarketProcessor {
 	
 	private Map<String, OrderBook> orderBooks;
+	private FactoryUtility factoryUtility;
 
-	public MarketProcessor(Map<String, OrderBook> orderBooks) {
+	public MarketProcessor(Map<String, OrderBook> orderBooks, FactoryUtility factoryUtility) {
 		this.orderBooks = orderBooks;
+		this.factoryUtility = factoryUtility;
 	}
 	
 	public MarketUpdate<Double, Integer> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
 		try{
 			OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
 			if(orderBook==null){
-				orderBook = new OrderBook(new MarketDepth(new PriorityQueue<>(16, new DescendingComparator<>()), Side.B), 
-						new MarketDepth(new PriorityQueue<>(16, new AscendingComparator<>()), Side.S));
+				orderBook = factoryUtility.createOrderBook();
 				orderBooks.put(newQuote.getSymbol(), orderBook);
 			}
 			

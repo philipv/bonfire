@@ -128,37 +128,26 @@ public class MarketDepthTest extends BaseUnitTest{
 		assertDepth(new double[]{9.9, 10.0}, new int[][]{{70}, {1000}}, depth);
 	}
 	
+	@Test
+	public void testWrongInput(){
+		depth = new PriorityQueue<>(16, new AscendingComparator<>());
+		marketDepth = new MarketDepth(depth, Side.S);
+		
+		Quote quote = createQuote(9.9, 200);
+		quote.setPrice(null);
+		try{
+			marketDepth.match(quote);
+			Assert.fail("Should not reach this point");
+		}catch(Exception e){
+			Assert.assertTrue(e instanceof IllegalArgumentException);
+		}
+	}
+	
 	private void populateBook(double[] buyPrices, int[][] buyQuantities) {
 		for(int i=0;i<buyPrices.length;i++){
 			for(int quantity:buyQuantities[i]){
 				marketDepth.add(createQuote(buyPrices[i], quantity));
 			}
 		}
-	}
-	
-	private void assertTradeDetails(List<Trade> trades, double[] expectedPrices, int[] expectedQuantities){
-		Assert.assertTrue(expectedPrices.length==expectedQuantities.length);
-		Assert.assertNotNull(trades);
-		Assert.assertTrue(expectedPrices.length==trades.size());
-		for(int i=0; i<expectedPrices.length;i++){
-			Trade trade = trades.get(i);
-			Assert.assertNotNull(trade);
-			Assert.assertEquals(expectedPrices[i],trade.getPrice(), 0.0001);
-			Assert.assertEquals(expectedQuantities[i], trade.getQuantity().intValue());
-		}
-	}
-	
-	private void assertDepth(double[] sortedExpectedPrices, int[][] quantities,
-			PriorityQueue<Sequenceable<Quote>> depth) {
-		for(int i=0;i<sortedExpectedPrices.length;i++){
-			for(int j=0;j<quantities[i].length;j++){
-				Quote quote = depth.poll().getEntry();
-				Assert.assertNotNull(quote);
-				Assert.assertEquals(sortedExpectedPrices[i], quote.getPrice(), 0.0001);
-				Assert.assertEquals(sortedExpectedPrices[i], quote.getPrice(), 0.0001);
-				Assert.assertEquals(quantities[i][j], quote.getQuantity().intValue());
-			}
-		}
-		Assert.assertEquals(0, depth.size());
 	}
 }

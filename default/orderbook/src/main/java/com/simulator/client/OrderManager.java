@@ -4,21 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Observer;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import javax.swing.text.Position;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.factory.FactoryUtility;
 import com.simulator.processor.AsyncParallelProcessor;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 /*
  * This component is responsible for:
