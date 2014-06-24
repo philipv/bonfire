@@ -1,13 +1,13 @@
-package com.simulator.orderbook.util;
+package com.simulator.util;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Sequenceable;
-import com.simulator.orderbook.data.Side;
-import com.simulator.orderbook.data.Trade;
+import com.simulator.data.Quote;
+import com.simulator.data.Sequenceable;
+import com.simulator.data.Side;
+import com.simulator.data.Trade;
 
 public class MarketDepth {
 	private PriorityQueue<Sequenceable<Quote>> depth;

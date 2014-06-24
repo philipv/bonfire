@@ -1,9 +1,9 @@
-package com.simulator.orderbook.util;
+package com.simulator.util;
 
 import java.util.Comparator;
 
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Sequenceable;
+import com.simulator.data.Quote;
+import com.simulator.data.Sequenceable;
 
 public class DescendingComparator<T extends Sequenceable<Quote>> implements Comparator<T> {
 

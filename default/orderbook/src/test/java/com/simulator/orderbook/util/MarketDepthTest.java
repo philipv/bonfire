@@ -7,11 +7,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.simulator.orderbook.BaseUnitTest;
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Sequenceable;
-import com.simulator.orderbook.data.Side;
-import com.simulator.orderbook.data.Trade;
+import com.simulator.BaseUnitTest;
+import com.simulator.data.Quote;
+import com.simulator.data.Sequenceable;
+import com.simulator.data.Side;
+import com.simulator.data.Trade;
+import com.simulator.util.AscendingComparator;
+import com.simulator.util.DescendingComparator;
+import com.simulator.util.MarketDepth;
 
 public class MarketDepthTest extends BaseUnitTest{
 

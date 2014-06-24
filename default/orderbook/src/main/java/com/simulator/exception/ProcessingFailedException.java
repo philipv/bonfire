@@ -1,4 +1,4 @@
-package com.simulator.orderbook.exception;
+package com.simulator.exception;
 
 public class ProcessingFailedException extends Exception {
 

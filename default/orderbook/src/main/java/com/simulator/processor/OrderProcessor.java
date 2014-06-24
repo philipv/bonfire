@@ -1,22 +1,21 @@
-package com.simulator.orderbook;
+package com.simulator.processor;
 
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import com.simulator.orderbook.data.OrderBookUpdate;
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Side;
-import com.simulator.orderbook.exception.ProcessingFailedException;
-import com.simulator.orderbook.util.MarketDepth;
-import com.simulator.orderbook.util.AscendingComparator;
-import com.simulator.orderbook.util.OrderBook;
-import com.simulator.orderbook.util.DescendingComparator;
-//put executors here
-public class ExchangeFacade {
+import com.simulator.data.OrderBookUpdate;
+import com.simulator.data.Quote;
+import com.simulator.data.Side;
+import com.simulator.exception.ProcessingFailedException;
+import com.simulator.orderbook.OrderBook;
+import com.simulator.util.AscendingComparator;
+import com.simulator.util.DescendingComparator;
+import com.simulator.util.MarketDepth;
+public class OrderProcessor {
 	
 	private Map<String, OrderBook> orderBooks;
 
-	public ExchangeFacade(Map<String, OrderBook> orderBooks) {
+	public OrderProcessor(Map<String, OrderBook> orderBooks) {
 		this.orderBooks = orderBooks;
 	}
 	

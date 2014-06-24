@@ -1,4 +1,4 @@
-package com.simulator.orderbook.data;
+package com.simulator.data;
 
 public class Trade {
 

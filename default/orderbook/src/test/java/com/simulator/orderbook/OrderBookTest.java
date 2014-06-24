@@ -1,16 +1,19 @@
-package com.simulator.orderbook.util;
+package com.simulator.orderbook;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.simulator.orderbook.BaseUnitTest;
-import com.simulator.orderbook.data.OrderBookUpdate;
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Side;
-
-import static org.mockito.Mockito.*;
+import com.simulator.BaseUnitTest;
+import com.simulator.data.OrderBookUpdate;
+import com.simulator.data.Quote;
+import com.simulator.data.Side;
+import com.simulator.util.MarketDepth;
 
 public class OrderBookTest extends BaseUnitTest{
 

@@ -1,7 +1,7 @@
-package com.simulator.orderbook;
+package com.simulator;
 
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Side;
+import com.simulator.data.Quote;
+import com.simulator.data.Side;
 
 
 public class BaseUnitTest {

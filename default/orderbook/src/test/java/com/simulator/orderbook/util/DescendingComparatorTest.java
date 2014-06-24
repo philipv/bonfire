@@ -3,9 +3,10 @@ package com.simulator.orderbook.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.simulator.orderbook.BaseUnitTest;
-import com.simulator.orderbook.data.Quote;
-import com.simulator.orderbook.data.Sequenceable;
+import com.simulator.BaseUnitTest;
+import com.simulator.data.Quote;
+import com.simulator.data.Sequenceable;
+import com.simulator.util.DescendingComparator;
 
 public class DescendingComparatorTest extends BaseUnitTest{
 	@Test
