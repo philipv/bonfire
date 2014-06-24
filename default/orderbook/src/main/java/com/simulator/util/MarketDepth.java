@@ -52,7 +52,8 @@ public class MarketDepth {
 				}else{
 					break matchLoop;
 				}
-				
+			}else{
+				break matchLoop;
 			}
 		}
 		return trades;

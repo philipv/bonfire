@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.simulator.data.OrderBookUpdate;
+import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Trade;
 import com.simulator.util.MarketDepth;
@@ -41,10 +41,10 @@ public class OrderBook {
 		}
 	}
 
-	public OrderBookUpdate<Double, Integer> placeOrder(Quote newQuote) {
+	public MarketUpdate<Double, Integer> placeOrder(Quote newQuote) {
 		if(newQuote.getSide()!=null){
 			List<Trade> trades = new LinkedList<>();
-			OrderBookUpdate<Double, Integer> matchResult = new OrderBookUpdate<>(trades, new HashMap<Double, 
+			MarketUpdate<Double, Integer> matchResult = new MarketUpdate<>(trades, new HashMap<Double, 
 					Integer>(), new HashMap<Double, Integer>());
 			switch(newQuote.getSide()){
 				case B:
@@ -57,13 +57,12 @@ public class OrderBook {
 			}
 			for(Trade trade:trades){
 				remove(trade, aggregatedBids);
-				matchResult.addBidUpdate(trade.getPrice(), aggregatedBids.get(trade.getPrice()));
 				remove(trade, aggregatedAsks);
-				matchResult.addAskUpdate(trade.getPrice(), aggregatedBids.get(trade.getPrice()));
 			}
 			placeOnDepth(newQuote);
-			matchResult.addBidUpdate(newQuote.getPrice(), aggregatedBids.get(newQuote.getPrice()));
-			matchResult.addAskUpdate(newQuote.getPrice(), aggregatedBids.get(newQuote.getPrice()));
+			matchResult.setTrades(trades);
+			matchResult.setAskUpdates(new HashMap<>(aggregatedAsks));
+			matchResult.setBidUpdates(new HashMap<>(aggregatedBids));
 			return matchResult;
 		} else {
 			throw new IllegalArgumentException("Wrong quote inputted (" + newQuote + ")");
@@ -83,8 +82,12 @@ public class OrderBook {
 		Integer aggregatedQuantity = aggregatedView.get(trade.getPrice());
 		if(aggregatedQuantity!=null){
 			aggregatedQuantity = aggregatedQuantity - trade.getQuantity();
+			if(aggregatedQuantity<=0){
+				aggregatedView.remove(trade.getPrice());
+			}else{
+				aggregatedView.put(trade.getPrice(), aggregatedQuantity);
+			}
 		}
-		aggregatedView.put(trade.getPrice(), aggregatedQuantity);
 	}
 }
 

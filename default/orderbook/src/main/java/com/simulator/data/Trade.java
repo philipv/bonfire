@@ -1,11 +1,9 @@
 package com.simulator.data;
 
-public class Trade {
+public class Trade extends MarketIdentity {
 
 	private Integer quantity;
 	private Double price;
-	private String symbol;
-
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -20,14 +18,6 @@ public class Trade {
 
 	public void setPrice(Double price) {
 		this.price = price;
-	}
-
-	public String getSymbol() {
-		return symbol;
-	}
-
-	public void setSymbol(String symbol) {
-		this.symbol = symbol;
 	}
 
 	@Override

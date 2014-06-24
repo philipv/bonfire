@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.simulator.BaseUnitTest;
-import com.simulator.data.OrderBookUpdate;
+import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.util.MarketDepth;
@@ -39,7 +39,7 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testMatchNewBuyQuote(){
 		Quote quote = createQuote(10.9, 250, Side.B);
-		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
 		verify(asks, times(1)).match(quote);//try to match once
 		verify(bids, times(1)).add(quote);//try to place once
 		verify(asks, times(0)).add(quote);
@@ -57,7 +57,7 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testFirstBuyQuote(){
 		Quote quote = createQuote(10.9, 250, Side.B);
-		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
 		verify(bids, times(1)).add(quote);
 		verify(asks, times(0)).add(quote);
 	}
@@ -65,7 +65,7 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testFirstSellQuote(){
 		Quote quote = createQuote(10.9, 250, Side.S);
-		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
 		verify(asks, times(1)).add(quote);
 		verify(bids, times(0)).add(quote);
 	}
@@ -87,7 +87,7 @@ public class OrderBookTest extends BaseUnitTest{
 	public void testPlaceNewInvalidSideQuote(){
 		Quote quote = createQuote(10.9, 250, null);
 		try{
-			OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+			MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
 		}catch(Exception e){
 			Assert.assertTrue(e instanceof IllegalArgumentException);
 		}
