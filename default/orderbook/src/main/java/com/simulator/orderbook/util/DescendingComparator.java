@@ -5,7 +5,7 @@ import java.util.Comparator;
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Sequenceable;
 
-public class ReverseComparator<T extends Sequenceable<Quote>> implements Comparator<T> {
+public class DescendingComparator<T extends Sequenceable<Quote>> implements Comparator<T> {
 
 	@Override
 	public int compare(T o1, T o2) {

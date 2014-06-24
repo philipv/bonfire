@@ -27,7 +27,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void placeBuyQuote(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<>());
+		depth = new PriorityQueue<>(16, new DescendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		double[] buyPricesInDesc = new double[]{10.1, 10, 9.9};
 		int[][] buyQuantities = new int[][]{{100, 10}, {1000}, {100}};
@@ -49,7 +49,7 @@ public class MarketDepthTest extends BaseUnitTest{
 
 	@Test
 	public void matchSellQuoteWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<>());
+		depth = new PriorityQueue<>(16, new DescendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
@@ -62,7 +62,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new NormalComparator<>());
+		depth = new PriorityQueue<>(16, new AscendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10.0, 9.9};
@@ -75,7 +75,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchSellQuoteOnMultiplePriceLevelWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<>());
+		depth = new PriorityQueue<>(16, new DescendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
@@ -88,7 +88,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteOnMultiplePriceLevelWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new NormalComparator<>());
+		depth = new PriorityQueue<>(16, new AscendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10.0, 9.9};
@@ -101,7 +101,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchSellQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new ReverseComparator<>());
+		depth = new PriorityQueue<>(16, new DescendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
@@ -114,7 +114,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
-		depth = new PriorityQueue<>(16, new NormalComparator<>());
+		depth = new PriorityQueue<>(16, new AscendingComparator<>());
 		marketDepth = new MarketDepth(depth, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10, 9.9};
@@ -128,7 +128,7 @@ public class MarketDepthTest extends BaseUnitTest{
 	private void populateBook(double[] buyPrices, int[][] buyQuantities) {
 		for(int i=0;i<buyPrices.length;i++){
 			for(int quantity:buyQuantities[i]){
-				marketDepth.placeQuote(createQuote(buyPrices[i], quantity));
+				marketDepth.add(createQuote(buyPrices[i], quantity));
 			}
 		}
 	}

@@ -43,7 +43,7 @@ public class MarketDepth {
 		
 		List<Trade> trades = new LinkedList<>();
 		matchLoop:
-		while(newQuote.getQuantity()>0){
+		while(!newQuote.isEmpty()){
 			Sequenceable<Quote> sequenceable = depth.peek();
 			if(sequenceable!=null){
 				Quote quoteOnBook = sequenceable.getEntry();
@@ -76,7 +76,7 @@ public class MarketDepth {
 		return trade;
 	}
 	
-	public void placeQuote(Quote newQuote) {
-		depth.add(new Sequenceable<Quote>(newQuote));
+	public boolean add(Quote newQuote) {
+		return depth.add(new Sequenceable<Quote>(newQuote));
 	}
 }

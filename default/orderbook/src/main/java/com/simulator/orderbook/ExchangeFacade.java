@@ -1,19 +1,17 @@
 package com.simulator.orderbook;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import com.simulator.orderbook.data.OrderBookUpdate;
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Side;
-import com.simulator.orderbook.data.Trade;
 import com.simulator.orderbook.exception.ProcessingFailedException;
 import com.simulator.orderbook.util.MarketDepth;
-import com.simulator.orderbook.util.NormalComparator;
+import com.simulator.orderbook.util.AscendingComparator;
 import com.simulator.orderbook.util.OrderBook;
-import com.simulator.orderbook.util.ReverseComparator;
-
+import com.simulator.orderbook.util.DescendingComparator;
+//put executors here
 public class ExchangeFacade {
 	
 	private Map<String, OrderBook> orderBooks;
@@ -22,31 +20,29 @@ public class ExchangeFacade {
 		this.orderBooks = orderBooks;
 	}
 	
-	public List<Trade> create(Quote newQuote) throws ProcessingFailedException{
-		List<Trade> trades = new LinkedList<>();
+	public OrderBookUpdate<Double, Integer> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
 		try{
 			if(newQuote!=null){
 				OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
 				if(orderBook==null){
-					orderBook = new OrderBook(new MarketDepth(new PriorityQueue<>(16, new ReverseComparator<>()), Side.B), 
-							new MarketDepth(new PriorityQueue<>(16, new NormalComparator<>()), Side.S));
+					orderBook = new OrderBook(new MarketDepth(new PriorityQueue<>(16, new DescendingComparator<>()), Side.B), 
+							new MarketDepth(new PriorityQueue<>(16, new AscendingComparator<>()), Side.S));
 					orderBooks.put(newQuote.getSymbol(), orderBook);
 				}
 				
-				trades = orderBook.match(newQuote);
-				if(newQuote.getQuantity()>0){
-					orderBook.place(newQuote);
-				}
+				OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(newQuote);
+				return orderBookUpdate;
+			}else{
+				throw new IllegalArgumentException("Wrong quote inputted (" + newQuote + ")");
 			}
 		}catch(RuntimeException ex){
 			if(ex instanceof IllegalArgumentException){
 				throw new ProcessingFailedException(ex);
 			}else{
-				throw new ProcessingFailedException("Internal Server Error. Please contact support.");
+				throw new ProcessingFailedException("Internal Server Error.", ex);
 			}
-		}
-		return trades;
-	}
 	
+		}
+	}
 	
 }

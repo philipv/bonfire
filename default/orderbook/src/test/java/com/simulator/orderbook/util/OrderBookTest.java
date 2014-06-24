@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.simulator.orderbook.BaseUnitTest;
+import com.simulator.orderbook.data.OrderBookUpdate;
 import com.simulator.orderbook.data.Quote;
 import com.simulator.orderbook.data.Side;
 
@@ -35,15 +36,17 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testMatchNewBuyQuote(){
 		Quote quote = createQuote(10.9, 250, Side.B);
-		orderBook.match(quote);
-		verify(asks, times(1)).match(quote);
+		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		verify(asks, times(1)).match(quote);//try to match once
+		verify(bids, times(1)).add(quote);//try to place once
+		verify(asks, times(0)).add(quote);
 		verify(bids, times(0)).match(quote);
 	}
 	
 	@Test
 	public void testMatchNewSellQuote(){
 		Quote quote = createQuote(10.9, 250, Side.S);
-		orderBook.match(quote);
+		orderBook.placeOrder(quote);
 		verify(bids, times(1)).match(quote);
 		verify(asks, times(0)).match(quote);
 	}
@@ -51,24 +54,24 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testFirstBuyQuote(){
 		Quote quote = createQuote(10.9, 250, Side.B);
-		orderBook.place(quote);
-		verify(bids, times(1)).placeQuote(quote);
-		verify(asks, times(0)).placeQuote(quote);
+		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		verify(bids, times(1)).add(quote);
+		verify(asks, times(0)).add(quote);
 	}
 	
 	@Test
 	public void testFirstSellQuote(){
 		Quote quote = createQuote(10.9, 250, Side.S);
-		orderBook.place(quote);
-		verify(asks, times(1)).placeQuote(quote);
-		verify(bids, times(0)).placeQuote(quote);
+		OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		verify(asks, times(1)).add(quote);
+		verify(bids, times(0)).add(quote);
 	}
 	
 	@Test
 	public void testMatchNewInvalidSideQuote(){
 		Quote quote = createQuote(10.9, 250, null);
 		try{
-			orderBook.match(quote);
+			orderBook.placeOrder(quote);
 			Assert.fail("should not reach this point");
 		}catch(Exception e){
 			Assert.assertTrue(e instanceof IllegalArgumentException);
@@ -81,12 +84,12 @@ public class OrderBookTest extends BaseUnitTest{
 	public void testPlaceNewInvalidSideQuote(){
 		Quote quote = createQuote(10.9, 250, null);
 		try{
-			orderBook.place(quote);
+			OrderBookUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
 		}catch(Exception e){
 			Assert.assertTrue(e instanceof IllegalArgumentException);
 		}
-		verify(bids, times(0)).placeQuote(quote);
-		verify(asks, times(0)).placeQuote(quote);
+		verify(bids, times(0)).add(quote);
+		verify(asks, times(0)).add(quote);
 		
 	}
 }

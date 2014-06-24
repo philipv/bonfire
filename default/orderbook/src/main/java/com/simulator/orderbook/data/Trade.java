@@ -39,4 +39,8 @@ public class Trade {
 		.append(getPrice());
 		return sb.toString();
 	}
+	
+	public boolean isEmpty(){
+		return getQuantity()==null || getQuantity()<=0;
+	}
 }
