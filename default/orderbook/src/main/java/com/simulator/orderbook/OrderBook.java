@@ -44,8 +44,7 @@ public class OrderBook {
 	public MarketUpdate<Double, Integer> placeOrder(Quote newQuote) {
 		if(newQuote.getSide()!=null){
 			List<Trade> trades = new LinkedList<>();
-			MarketUpdate<Double, Integer> matchResult = new MarketUpdate<>(trades, new HashMap<Double, 
-					Integer>(), new HashMap<Double, Integer>());
+			MarketUpdate<Double, Integer> matchResult = new MarketUpdate<>(trades);
 			switch(newQuote.getSide()){
 				case B:
 					trades = asks.match(newQuote);
@@ -57,12 +56,14 @@ public class OrderBook {
 			}
 			for(Trade trade:trades){
 				remove(trade, aggregatedBids);
+				matchResult.addBidUpdates(trade.getPrice(), aggregatedBids.get(trade.getPrice()));
 				remove(trade, aggregatedAsks);
+				matchResult.addAskUpdates(trade.getPrice(), aggregatedAsks.get(trade.getPrice()));
 			}
 			placeOnDepth(newQuote);
 			matchResult.setTrades(trades);
-			matchResult.setAskUpdates(new HashMap<>(aggregatedAsks));
-			matchResult.setBidUpdates(new HashMap<>(aggregatedBids));
+			matchResult.addAskUpdates(aggregatedAsks);
+			matchResult.addBidUpdates(aggregatedBids);
 			return matchResult;
 		} else {
 			throw new IllegalArgumentException("Wrong quote inputted (" + newQuote + ")");

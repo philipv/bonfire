@@ -48,6 +48,7 @@ public class OrderBookTest extends BaseUnitTest{
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().isEmpty());
 		Assert.assertEquals(1, orderBookUpdate.getBidUpdates().size());
 		Assert.assertEquals(orderBookUpdate.getBidUpdates().get(quote.getPrice()), quote.getQuantity());
+		System.out.println(orderBookUpdate.toString());
 	}
 	
 	@Test
@@ -62,6 +63,7 @@ public class OrderBookTest extends BaseUnitTest{
 		Assert.assertTrue(orderBookUpdate.getBidUpdates().isEmpty());
 		Assert.assertEquals(1, orderBookUpdate.getAskUpdates().size());
 		Assert.assertEquals(orderBookUpdate.getAskUpdates().get(quote.getPrice()), quote.getQuantity());
+		System.out.println(orderBookUpdate.toString());
 	}
 	
 	@Test
@@ -82,6 +84,7 @@ public class OrderBookTest extends BaseUnitTest{
 		Assert.assertTrue(orderBookUpdate.getBidUpdates().isEmpty());
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().isEmpty());
 		assertTradeDetails(orderBookUpdate.getTrades(), new double[]{11.0, 10.9},  new int[]{75, 175});
+		System.out.println(orderBookUpdate.toString());
 	}
 	
 	@Test
@@ -103,6 +106,7 @@ public class OrderBookTest extends BaseUnitTest{
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().size()==1);
 		Assert.assertEquals(5, orderBookUpdate.getAskUpdates().get(11.0).intValue());
 		assertTradeDetails(orderBookUpdate.getTrades(), new double[]{10.9, 11.0},  new int[]{175, 70});
+		System.out.println(orderBookUpdate.toString());
 	}
 	
 	@Test

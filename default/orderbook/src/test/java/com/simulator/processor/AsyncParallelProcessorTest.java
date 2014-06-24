@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +44,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 	@Test
 	public void testRepetiveQuotesForSameSymbolGoToSameProcessor() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
-		createMockProcessors(new MarketUpdate<Double, Integer>(null, null, null), mockProcessors);
+		createMockProcessors(new MarketUpdate<Double, Integer>(null), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
@@ -72,6 +73,37 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 			Assert.assertTrue(e.getCause() instanceof ProcessingFailedException);
 		}
 		verify(mockProcessors[0], times(1)).createMarketOrder(any(Quote.class));
+	}
+	
+	@Test
+	public void testExecutorShutdown() throws ProcessingFailedException, InterruptedException, ExecutionException{
+		MarketProcessor[] mockProcessors = new MarketProcessor[4];
+		createMockProcessors(new ProcessingFailedException(), mockProcessors);
+		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
+		
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		asyncParallelProcessor.shutdown();
+		try{
+			asyncParallelProcessor.process(createQuote(23.0, 100));
+			Assert.fail("Should not reach this point");
+		}catch(RejectedExecutionException e){
+			Assert.assertTrue(e instanceof RejectedExecutionException);
+		}
+	}
+	
+	@Test
+	public void testInvalidInput() throws ProcessingFailedException, InterruptedException, ExecutionException{
+		MarketProcessor[] mockProcessors = new MarketProcessor[4];
+		createMockProcessors(new ProcessingFailedException(), mockProcessors);
+		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
+		
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		Assert.assertNull(asyncParallelProcessor.process(null));
+		verify(mockProcessors[0], times(0)).createMarketOrder(any(Quote.class));
 	}
 
 	public void createMockProcessors(

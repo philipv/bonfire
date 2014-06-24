@@ -38,7 +38,7 @@ public class FactoryUtility {
 	}
 	
 	public MarketProcessor createMarketProcessor() {
-		return new MarketProcessor(new HashMap<String, OrderBook>(),new FactoryUtility());
+		return new MarketProcessor(new HashMap<String, OrderBook>(), this);
 	}
 	
 	public ExecutorService createSingleThreadedExecutor() {

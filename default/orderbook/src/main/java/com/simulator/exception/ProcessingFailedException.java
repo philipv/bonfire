@@ -15,10 +15,6 @@ public class ProcessingFailedException extends Exception {
 		super(message, cause);
 	}
 
-	public ProcessingFailedException(String message) {
-		super(message);
-	}
-
 	public ProcessingFailedException(Throwable cause) {
 		super(cause);
 	}

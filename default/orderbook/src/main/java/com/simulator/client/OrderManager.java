@@ -35,9 +35,7 @@ public class OrderManager{
 			try{
 				MarketUpdate<Double, Integer> marketUpdate = future.get();
 				if(marketUpdate!=null){
-					System.out.println(marketUpdate.getTrades());
-					System.out.println(marketUpdate.getBidUpdates());
-					System.out.println(marketUpdate.getAskUpdates());
+					System.out.println(marketUpdate);
 				}
 			}catch(ExecutionException|InterruptedException ex){
 				System.out.println("Couldn't process result");
@@ -48,25 +46,23 @@ public class OrderManager{
 
 	private static final String SEPARATOR = " ";
 	private static final int cores = 8;
-	private FactoryUtility factoryUtility = new FactoryUtility();
+	private FactoryUtility factoryUtility;
 	private AsyncParallelProcessor processor;
 	private ExecutorService resultProcessor;
 	
 	public static void main(String[] args) throws FileNotFoundException{
-		OrderManager orderManager = new OrderManager();
+		OrderManager orderManager = new OrderManager(new FactoryUtility());
 		orderManager.initialize();
 	}
 	
-	public OrderManager(){
+	public OrderManager(FactoryUtility factoryUtility){
+		this.factoryUtility = factoryUtility;
 		this.processor = new AsyncParallelProcessor(cores, factoryUtility);
 		this.resultProcessor = Executors.newSingleThreadExecutor();
 	}
 
 	public void initialize() throws FileNotFoundException {
-		read(new InputStreamReader(System.in));
-	}
-
-	private void read(InputStreamReader inputStreamReader) {
+		InputStreamReader inputStreamReader = new InputStreamReader(System.in);
 		BufferedReader reader = null;
 		try{
 			reader = factoryUtility.createBufferedReader(inputStreamReader);
@@ -94,11 +90,10 @@ public class OrderManager{
 				e.printStackTrace();
 			}
 		}
+	
 	}
 
-	public void setFactoryUtility(FactoryUtility factoryUtility) {
-		this.factoryUtility = factoryUtility;
-	}
+	private void read(InputStreamReader inputStreamReader) {}
 
 	public Quote processInput(String inputString){
 		String[] inputs = inputString.split(SEPARATOR);
