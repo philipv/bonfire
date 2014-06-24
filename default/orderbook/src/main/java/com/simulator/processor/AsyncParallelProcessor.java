@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
@@ -12,24 +11,23 @@ import com.simulator.data.Quote;
 import com.simulator.data.Trade;
 import com.simulator.exception.ProcessingFailedException;
 import com.simulator.factory.FactoryUtility;
-import com.simulator.orderbook.OrderBook;
 
 public class AsyncParallelProcessor {
 	private MarketProcessor[] marketProcessors;
 	private ExecutorService[] singleThreadedExecutors;
 	private int cores;
 	
-	public AsyncParallelProcessor(int cores) {
+	public AsyncParallelProcessor(int cores, FactoryUtility factoryUtility) {
 		this.cores = cores;
 		setMarketProcessors(new MarketProcessor[cores]);
 		setSingleThreadedExecutors(new ExecutorService[cores]);
 		
 		for(int i=0;i<cores;i++){
-			marketProcessors[i] = new MarketProcessor(new HashMap<String, OrderBook>(),new FactoryUtility());
-			singleThreadedExecutors[i] = Executors.newSingleThreadExecutor();
+			marketProcessors[i] = factoryUtility.createMarketProcessor();
+			singleThreadedExecutors[i] = factoryUtility.createSingleThreadedExecutor();
 		}
 	}
-	
+
 	public Future<MarketUpdate<Double, Integer>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");

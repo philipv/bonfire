@@ -58,7 +58,7 @@ public class OrderManager{
 	}
 	
 	public OrderManager(){
-		this.processor = new AsyncParallelProcessor(cores);
+		this.processor = new AsyncParallelProcessor(cores, factoryUtility);
 		this.resultProcessor = Executors.newSingleThreadExecutor();
 	}
 
