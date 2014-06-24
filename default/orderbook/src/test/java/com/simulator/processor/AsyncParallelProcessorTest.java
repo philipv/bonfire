@@ -6,6 +6,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,38 +28,63 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 	@Before
 	public void init(){
 		factoryUtility = mock(FactoryUtility.class);
+		when(factoryUtility.createSingleThreadedExecutor()).thenCallRealMethod();
 	}
 	
 	@Test
 	public void testCreatedParallelMarketOrders(){
+		when(factoryUtility.createMultiMarketProcessors(cores)).thenCallRealMethod();
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		verify(factoryUtility, times(cores)).createMarketProcessor();
 		verify(factoryUtility, times(cores)).createSingleThreadedExecutor();
 	}
 	
 	@Test
-	public void testRepetiveQuotesForSameSymbolGoToSameProcessor() throws ProcessingFailedException{
-		MarketUpdate<Double, Integer> sampleResult = new MarketUpdate<Double, Integer>(null, null, null);
+	public void testRepetiveQuotesForSameSymbolGoToSameProcessor() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
-		createMockProcessors(sampleResult, mockProcessors);
+		createMockProcessors(new MarketUpdate<Double, Integer>(null, null, null), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
-		when(factoryUtility.createSingleThreadedExecutor()).thenCallRealMethod();
+		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
-		asyncParallelProcessor.process(createQuote(23.0, 100));
-		asyncParallelProcessor.process(createQuote(23.0, 100));
+		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
+		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
 		verify(mockProcessors[0], times(2)).createMarketOrder(any(Quote.class));
+	}
+	
+	@Test
+	public void testPassingExceptionToClient() throws ProcessingFailedException, InterruptedException, ExecutionException{
+		MarketProcessor[] mockProcessors = new MarketProcessor[4];
+		createMockProcessors(new ProcessingFailedException(), mockProcessors);
+		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
+		
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		Future<MarketUpdate<Double, Integer>> future = asyncParallelProcessor.process(createQuote(23.0, 100));
+		try{
+			future.get();
+			Assert.fail("Should not reach this point");
+		}catch(ExecutionException|InterruptedException e){
+			Assert.assertTrue(e instanceof ExecutionException);
+			Assert.assertTrue(e.getCause() instanceof ProcessingFailedException);
+		}
+		verify(mockProcessors[0], times(1)).createMarketOrder(any(Quote.class));
 	}
 
 	public void createMockProcessors(
-			MarketUpdate<Double, Integer> sampleResult,
+			Object sampleResult,
 			MarketProcessor[] mockProcessors)
 			throws ProcessingFailedException {
 		for(int i=0;i<cores;i++){
 			mockProcessors[i] = mock(MarketProcessor.class);
-			when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenReturn(sampleResult);
+			if(sampleResult instanceof MarketUpdate){
+				when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenReturn((MarketUpdate<Double, Integer>)sampleResult);
+			}else if(sampleResult instanceof Exception){
+				when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenThrow((Exception)sampleResult);
+			}
 		}
 	}
-	
-	
 }

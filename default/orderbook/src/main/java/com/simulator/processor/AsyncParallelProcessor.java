@@ -1,26 +1,39 @@
 package com.simulator.processor;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
-import com.simulator.data.Trade;
-import com.simulator.exception.ProcessingFailedException;
 import com.simulator.factory.FactoryUtility;
 
 public class AsyncParallelProcessor {
+	private final class QuoteTask implements
+			Callable<MarketUpdate<Double, Integer>> {
+		private final Quote newQuote;
+		private MarketProcessor marketProcessor;
+
+		private QuoteTask(MarketProcessor marketProcessor, Quote newQuote) {
+			this.marketProcessor = marketProcessor;
+			this.newQuote = newQuote;
+		}
+
+		@Override
+		public MarketUpdate<Double, Integer> call() throws Exception {
+			MarketUpdate<Double, Integer> result = marketProcessor.createMarketOrder(newQuote);
+			return result;
+		}
+	}
+
 	private MarketProcessor[] marketProcessors;
 	private ExecutorService[] singleThreadedExecutors;
 	private int cores;
 	
 	public AsyncParallelProcessor(int cores, FactoryUtility factoryUtility) {
 		this.cores = cores;
-		setMarketProcessors(new MarketProcessor[cores]);
-		setSingleThreadedExecutors(new ExecutorService[cores]);
+		setMarketProcessors(factoryUtility.createMultiMarketProcessors(cores));
+		setSingleThreadedExecutors(factoryUtility.createMultiExecutors(cores));
 		
 		for(int i=0;i<cores;i++){
 			marketProcessors[i] = factoryUtility.createMarketProcessor();
@@ -31,18 +44,7 @@ public class AsyncParallelProcessor {
 	public Future<MarketUpdate<Double, Integer>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");
-			return singleThreadedExecutors[executorId].submit(new Callable<MarketUpdate<Double, Integer>>() {
-				@Override
-				public MarketUpdate<Double, Integer> call() throws Exception {
-					try{
-						return marketProcessors[executorId].createMarketOrder(newQuote);
-					}catch(ProcessingFailedException pfe){
-						System.out.println("Couldn't process input");
-						pfe.printStackTrace();
-					}
-					return new MarketUpdate<>(new LinkedList<Trade>(), new HashMap<Double, Integer>(), new HashMap<Double, Integer>());
-				}
-			});	
+			return singleThreadedExecutors[executorId].submit(new QuoteTask(marketProcessors[executorId], newQuote));	
 		}
 		return null;
 	}
