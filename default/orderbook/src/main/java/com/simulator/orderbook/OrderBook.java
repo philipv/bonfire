@@ -12,6 +12,13 @@ import com.simulator.data.Trade;
 import com.simulator.factory.InjectionManager;
 import com.simulator.util.IMarketDepth;
 
+
+/**
+ * @author vinith
+ * This class is a composition of depths for both sides. This also manages an aggregated 
+ * snapshot of all the price levels for bid/ask for market data updates. This cannot be 
+ * used concurrently.
+ */
 public class OrderBook {
 	private IMarketDepth bids;
 	private IMarketDepth asks;
@@ -43,6 +50,13 @@ public class OrderBook {
 		}
 	}
 
+	/**
+	 * This method tries to match quotes from opposite side and then if there is any residual quantity
+	 * on the new quote then it will place that on the same side. This also manages the aggregated trade 
+	 * size for every price level on the book
+	 * @param newQuote
+	 * @return marketUpdate - consolidated view of impact of this new quote on market
+	 */
 	public MarketUpdate<Double, Long> placeOrder(Quote newQuote) {
 		if(newQuote.getSide()!=null){
 			List<Trade> trades = new LinkedList<>();
@@ -72,6 +86,11 @@ public class OrderBook {
 		}
 	}
 	
+	/**
+	 * This method adds or update(summation) an existing price level with the new quote quantity.
+	 * @param quote
+	 * @param aggregatedView
+	 */
 	private void addOrUpdate(Quote quote, Map<Double, Long> aggregatedView){
 		Long aggregatedQuantity = aggregatedView.get(quote.getPrice());
 		if(aggregatedQuantity==null){
@@ -81,6 +100,11 @@ public class OrderBook {
 		aggregatedView.put(quote.getPrice(), aggregatedQuantity);
 	}
 	
+	/**
+	 * This method removes/deducts trade quantity from an existing price level.
+	 * @param trade
+	 * @param aggregatedView
+	 */
 	private void remove(Trade trade, Map<Double, Long> aggregatedView){
 		Long aggregatedQuantity = aggregatedView.get(trade.getPrice());
 		if(aggregatedQuantity!=null){

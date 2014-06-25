@@ -111,7 +111,7 @@ public class OrderBookTest extends BaseUnitTest{
 		verify(asks, times(0)).add(quote);
 		Assert.assertTrue(orderBookUpdate.getBidUpdates().isEmpty());
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().size()==1);
-		Assert.assertEquals(5, orderBookUpdate.getAskUpdates().get(11.0).intValue());
+		Assert.assertEquals(5, orderBookUpdate.getAskUpdates().get(11.0).longValue());
 		assertTradeDetails(orderBookUpdate.getTrades(), new double[]{10.9, 11.0},  new int[]{175, 70});
 		System.out.println(orderBookUpdate.toString());
 	}

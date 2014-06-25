@@ -53,7 +53,7 @@ public class BaseUnitTest {
 			Trade trade = trades.get(i);
 			Assert.assertNotNull(trade);
 			Assert.assertEquals(expectedPrices[i],trade.getPrice(), 0.0001);
-			Assert.assertEquals(expectedQuantities[i], trade.getQuantity().intValue());
+			Assert.assertEquals(expectedQuantities[i], trade.getQuantity().longValue());
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class BaseUnitTest {
 				Assert.assertNotNull(quote);
 				Assert.assertEquals(sortedExpectedPrices[i], quote.getPrice(), 0.0001);
 				Assert.assertEquals(sortedExpectedPrices[i], quote.getPrice(), 0.0001);
-				Assert.assertEquals(quantities[i][j], quote.getQuantity().intValue());
+				Assert.assertEquals(quantities[i][j], quote.getQuantity().longValue());
 			}
 		}
 		Assert.assertEquals(0, depth.size());
