@@ -41,10 +41,10 @@ public class InjectionManager {
 	public PriorityQueue<Sequenceable<Quote>> createPriorityQueue(Side side) {
 		switch(side){
 			case B: 
-				return new PriorityQueue<>(16, new DescendingComparator<>());
+				return new PriorityQueue<>(16, new DescendingComparator<Sequenceable<Quote>, Quote>());
 			case S:
 			default:
-				return new PriorityQueue<>(16, new AscendingComparator<>());
+				return new PriorityQueue<>(16, new AscendingComparator<Sequenceable<Quote>, Quote>());
 		}
 	}
 	

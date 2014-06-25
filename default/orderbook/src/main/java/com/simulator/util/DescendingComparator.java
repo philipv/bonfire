@@ -2,10 +2,9 @@ package com.simulator.util;
 
 import java.util.Comparator;
 
-import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 
-public class DescendingComparator<T extends Sequenceable<Quote>> implements Comparator<T> {
+public class DescendingComparator<T extends Sequenceable<E>, E extends Comparable<E>> implements Comparator<T> {
 
 	@Override
 	public int compare(T o1, T o2) {

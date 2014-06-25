@@ -2,7 +2,7 @@ package com.simulator.data;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Sequenceable<E> implements Comparable<Sequenceable<E>>{
+public class Sequenceable<E extends Comparable<E>> implements Comparable<Sequenceable<E>>{
 	private static AtomicLong sequencer = new AtomicLong(0);
 	
 	private Long sequence;
