@@ -35,10 +35,8 @@ public class CommandLineOrderManager{
 	}
 
 	public void initialize() throws FileNotFoundException {
-		InputStreamReader inputStreamReader = new InputStreamReader(System.in);
-		BufferedReader reader = null;
-		try{
-			reader = injectionManager.createBufferedReader(inputStreamReader);
+		;
+		try(BufferedReader reader =injectionManager.createBufferedReader(new InputStreamReader(System.in))){
 			String inputString = null;
 			
 			while((inputString = reader.readLine())!=null){
@@ -54,14 +52,8 @@ public class CommandLineOrderManager{
 			System.out.println("Cannot read from the input stream. Program will exit now");
 			e.printStackTrace();
 		}finally{
-			try {
-				reader.close();
-				inputStreamReader.close();
-				asyncMarketProcessor.shutdown();
-				asyncResultProcessor.shutdown();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			asyncMarketProcessor.shutdown();
+			asyncResultProcessor.shutdown();
 		}
 	
 	}

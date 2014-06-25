@@ -126,17 +126,22 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	}
 	
 	@Test
-	public void testWrongInput(){
+	public void matchWrongInput(){
 		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		
-		Quote quote = createQuote(9.9, 200);
-		quote.setPrice(null);
-		try{
-			marketDepth.match(quote);
-			Assert.fail("Should not reach this point");
-		}catch(Exception e){
-			Assert.assertTrue(e instanceof IllegalArgumentException);
+		double[] sellPricesInBook = new double[]{10, 9.9};
+		int[][] sellQuantitiesInBook = new int[][]{{1000}, {10, 260}};
+		populateBook(sellPricesInBook, sellQuantitiesInBook);
+		Quote[] testQuotes = new Quote[]{new Quote(), createQuote(0, 10), createQuote(9.0001, 10), createQuote(10, 0)};
+		for(Quote testQuote:testQuotes){
+			try{
+				marketDepth.match(testQuote);
+				Assert.fail("Should not reach this point");
+			}catch(Exception e){
+				Assert.assertTrue(e instanceof IllegalArgumentException);
+			}
 		}
+		assertDepth(new double[]{9.9, 10.0}, new int[][]{{10, 260}, {1000}}, askDepth);
 	}
 	
 	private void populateBook(double[] buyPrices, int[][] buyQuantities) {

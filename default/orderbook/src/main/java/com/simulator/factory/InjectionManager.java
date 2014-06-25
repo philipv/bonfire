@@ -2,7 +2,9 @@ package com.simulator.factory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
@@ -64,12 +66,12 @@ public class InjectionManager {
 		return Executors.newSingleThreadExecutor();
 	}
 	
-	public MarketProcessor[] createMultiMarketProcessors(int cores) {
-		return new MarketProcessor[cores];
+	public List<MarketProcessor> createMultiMarketProcessors(int cores) {
+		return new ArrayList<MarketProcessor>(cores);
 	}
 	
-	public ExecutorService[] createMultiExecutors(int cores) {
-		return new ExecutorService[cores];
+	public List<ExecutorService> createMultiExecutors(int cores) {
+		return new ArrayList<ExecutorService>(cores);
 	}
 	
 	public AsyncParallelProcessor createAsyncProcessor(int cores) {

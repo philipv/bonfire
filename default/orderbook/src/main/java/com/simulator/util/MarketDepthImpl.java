@@ -11,6 +11,7 @@ import com.simulator.data.Trade;
 import com.simulator.factory.InjectionManager;
 
 public class MarketDepthImpl implements MarketDepth{
+	private static final double ALLOWED_DECIMAL_PLACES = 3;
 	private PriorityQueue<Sequenceable<Quote>> depth;
 	private IMatcher matcher;
 
@@ -40,7 +41,15 @@ public class MarketDepthImpl implements MarketDepth{
 	@Override
 	public List<Trade> match(Quote newQuote) {
 		if(newQuote.getPrice()==null || newQuote.getQuantity()==null){
-			throw new IllegalArgumentException("Wrong quote inputted (" + newQuote + ")");
+			throw new IllegalArgumentException("Price and Quantity cannot be null(" + newQuote + ")");
+		}
+		
+		if(newQuote.getPrice()<=0 || newQuote.getQuantity()<=0){
+			throw new IllegalArgumentException("Price and Quantity cannot be 0 or less(" + newQuote + ")");
+		}
+		
+		if(!isPriceValid(newQuote.getPrice())){
+			throw new IllegalArgumentException("Price cannot be more than " + ALLOWED_DECIMAL_PLACES + " decimal places(" + newQuote + ")");
 		}
 		
 		List<Trade> trades = new LinkedList<>();
@@ -82,5 +91,11 @@ public class MarketDepthImpl implements MarketDepth{
 	@Override
 	public boolean add(Quote newQuote) {
 		return depth.add(new Sequenceable<Quote>(newQuote));
+	}
+	
+	private boolean isPriceValid(double quotePrice){
+		double price = quotePrice * Math.pow(10d, ALLOWED_DECIMAL_PLACES);
+		double difference = price - (int)price;
+		return difference<0.1d;
 	}
 }

@@ -1,5 +1,7 @@
 package com.simulator.processor;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -9,26 +11,28 @@ import com.simulator.factory.InjectionManager;
 import com.simulator.processor.task.CreateQuoteTask;
 
 public class AsyncParallelProcessor {
-	private MarketProcessor[] marketProcessors;
-	private ExecutorService[] singleThreadedExecutors;
+	private List<MarketProcessor> marketProcessors;
+	private List<ExecutorService> singleThreadedExecutors;
 	private int cores;
 	
 	public AsyncParallelProcessor(int cores, InjectionManager injectionManager) {
 		this.cores = cores;
-		setMarketProcessors(injectionManager.createMultiMarketProcessors(cores));
-		setSingleThreadedExecutors(injectionManager.createMultiExecutors(cores));
 		
+		List<MarketProcessor> marketProcessors = injectionManager.createMultiMarketProcessors(cores);
+		List<ExecutorService> singleThreadedExecutors = injectionManager.createMultiExecutors(cores);
 		for(int i=0;i<cores;i++){
-			marketProcessors[i] = injectionManager.createMarketProcessor();
-			singleThreadedExecutors[i] = injectionManager.createSingleThreadedExecutor();
+			marketProcessors.add(injectionManager.createMarketProcessor());
+			singleThreadedExecutors.add(injectionManager.createSingleThreadedExecutor());
 		}
+		setMarketProcessors(Collections.unmodifiableList(marketProcessors));
+		setSingleThreadedExecutors(Collections.unmodifiableList(singleThreadedExecutors));
 	}
 
 	public Future<MarketUpdate<Double, Long>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");
-			CreateQuoteTask task = new CreateQuoteTask(marketProcessors[executorId], newQuote);
-			Future<MarketUpdate<Double, Long>> createQuoteFuture = singleThreadedExecutors[executorId].submit(task);
+			CreateQuoteTask task = new CreateQuoteTask(marketProcessors.get(executorId), newQuote);
+			Future<MarketUpdate<Double, Long>> createQuoteFuture = singleThreadedExecutors.get(executorId).submit(task);
 			return createQuoteFuture;	
 		}
 		return null;
@@ -38,11 +42,11 @@ public class AsyncParallelProcessor {
 		return key.hashCode()%cores;
 	}
 	
-	public void setMarketProcessors(MarketProcessor[] marketProcessors) {
+	public void setMarketProcessors(List<MarketProcessor> marketProcessors) {
 		this.marketProcessors = marketProcessors;
 	}
 
-	public void setSingleThreadedExecutors(ExecutorService[] singleThreadedExecutors) {
+	public void setSingleThreadedExecutors(List<ExecutorService> singleThreadedExecutors) {
 		this.singleThreadedExecutors = singleThreadedExecutors;
 	}
 	
