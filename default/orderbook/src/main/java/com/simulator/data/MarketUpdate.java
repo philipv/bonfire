@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class MarketUpdate<K,V> {
+public class MarketUpdate<K,V> extends MarketIdentity{
 	private static final String LINE_SEPARATOR = "------------------------------------\n";
 	private static final int PADDING = 20;
 	private List<Trade> trades;
@@ -46,7 +46,7 @@ public class MarketUpdate<K,V> {
 	}
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(getSymbol()).append("\n");
 		if(trades!=null && !trades.isEmpty()){
 			sb.append("Trades\n").append(LINE_SEPARATOR);
 			for(Trade trade:trades){

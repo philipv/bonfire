@@ -34,13 +34,15 @@ public class MarketProcessor {
 	 */
 	public MarketUpdate<Double, Long> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
 		try{
-			OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
+			String symbol = newQuote.getSymbol();
+			OrderBook orderBook = orderBooks.get(symbol);
 			if(orderBook==null){
 				orderBook = factoryUtility.createOrderBook();
-				orderBooks.put(newQuote.getSymbol(), orderBook);
+				orderBooks.put(symbol, orderBook);
 			}
 			
 			MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(newQuote);
+			orderBookUpdate.setSymbol(symbol==null?"":symbol);
 			return orderBookUpdate;
 		}catch(RuntimeException ex){
 			if(ex instanceof IllegalArgumentException){
