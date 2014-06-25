@@ -12,13 +12,13 @@ import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 
 
 public class BaseUnitTest {
 	
 	@Mock
-	protected FactoryUtility factoryUtility;
+	protected InjectionManager factoryUtility;
 	
 	protected Quote createQuote(double price, int quantity){
 		Quote quote = new Quote();

@@ -8,13 +8,13 @@ import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 
 public class MarketDepthImpl implements MarketDepth{
 	private PriorityQueue<Sequenceable<Quote>> depth;
 	private IMatcher matcher;
 
-	public MarketDepthImpl(FactoryUtility factoryUtility, Side side) {
+	public MarketDepthImpl(InjectionManager factoryUtility, Side side) {
 		this.depth = factoryUtility.createPriorityQueue(side);
 		switch(side){
 			case B:

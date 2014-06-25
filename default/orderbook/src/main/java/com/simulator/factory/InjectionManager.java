@@ -21,7 +21,7 @@ import com.simulator.util.MarketDepthImpl;
 /*
  * Utility class for creating different types of objects
  */
-public class FactoryUtility {
+public class InjectionManager {
 	
 	public BufferedReader createBufferedReader(InputStreamReader inputStreamReader) {
 		return new BufferedReader(inputStreamReader);

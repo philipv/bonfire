@@ -6,7 +6,7 @@ import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 
 public class AsyncParallelProcessor {
 	private final class QuoteTask implements
@@ -30,7 +30,7 @@ public class AsyncParallelProcessor {
 	private ExecutorService[] singleThreadedExecutors;
 	private int cores;
 	
-	public AsyncParallelProcessor(int cores, FactoryUtility factoryUtility) {
+	public AsyncParallelProcessor(int cores, InjectionManager factoryUtility) {
 		this.cores = cores;
 		setMarketProcessors(factoryUtility.createMultiMarketProcessors(cores));
 		setSingleThreadedExecutors(factoryUtility.createMultiExecutors(cores));

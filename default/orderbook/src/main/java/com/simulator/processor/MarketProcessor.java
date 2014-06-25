@@ -5,14 +5,14 @@ import java.util.Map;
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.exception.ProcessingFailedException;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 import com.simulator.orderbook.OrderBook;
 public class MarketProcessor {
 	
 	private Map<String, OrderBook> orderBooks;
-	private FactoryUtility factoryUtility;
+	private InjectionManager factoryUtility;
 
-	public MarketProcessor(FactoryUtility factoryUtility) {
+	public MarketProcessor(InjectionManager factoryUtility) {
 		this.orderBooks = factoryUtility.createOrderBookPerSymbol();
 		this.factoryUtility = factoryUtility;
 	}

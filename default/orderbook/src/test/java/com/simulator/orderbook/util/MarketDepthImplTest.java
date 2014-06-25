@@ -14,7 +14,7 @@ import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 import com.simulator.util.MarketDepthImpl;
 
 public class MarketDepthImplTest extends BaseUnitTest{
@@ -26,8 +26,8 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Before
 	public void init(){
-		bidDepth = new FactoryUtility().createPriorityQueue(Side.B);
-		askDepth = new FactoryUtility().createPriorityQueue(Side.S);
+		bidDepth = new InjectionManager().createPriorityQueue(Side.B);
+		askDepth = new InjectionManager().createPriorityQueue(Side.S);
 		when(factoryUtility.createPriorityQueue(Side.B)).thenReturn(bidDepth);
 		when(factoryUtility.createPriorityQueue(Side.S)).thenReturn(askDepth);
 		marketDepth = null;

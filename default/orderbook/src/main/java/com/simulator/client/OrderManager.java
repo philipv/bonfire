@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 import com.simulator.processor.AsyncParallelProcessor;
 
 public class OrderManager{
@@ -39,16 +39,16 @@ public class OrderManager{
 
 	private static final String SEPARATOR = " ";
 	private static final int cores = 8;
-	private FactoryUtility factoryUtility;
+	private InjectionManager factoryUtility;
 	private AsyncParallelProcessor processor;
 	private ExecutorService resultProcessor;
 	
 	public static void main(String[] args) throws FileNotFoundException{
-		OrderManager orderManager = new OrderManager(new FactoryUtility());
+		OrderManager orderManager = new OrderManager(new InjectionManager());
 		orderManager.initialize();
 	}
 	
-	public OrderManager(FactoryUtility factoryUtility){
+	public OrderManager(InjectionManager factoryUtility){
 		this.factoryUtility = factoryUtility;
 		this.processor = new AsyncParallelProcessor(cores, factoryUtility);
 		this.resultProcessor = Executors.newSingleThreadExecutor();

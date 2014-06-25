@@ -18,24 +18,21 @@ import com.simulator.BaseUnitTest;
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.exception.ProcessingFailedException;
-import com.simulator.factory.FactoryUtility;
 
 public class AsyncParallelProcessorTest extends BaseUnitTest{
 
 	private AsyncParallelProcessor asyncParallelProcessor;
-	private FactoryUtility factoryUtility;
 	private static final int cores = 4;
 
 	@Before
 	public void init(){
-		factoryUtility = mock(FactoryUtility.class);
 		when(factoryUtility.createSingleThreadedExecutor()).thenCallRealMethod();
+		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 	}
 	
 	@Test
 	public void testCreatedParallelMarketOrders(){
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenCallRealMethod();
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		verify(factoryUtility, times(cores)).createMarketProcessor();
 		verify(factoryUtility, times(cores)).createSingleThreadedExecutor();
@@ -47,7 +44,6 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		createMockProcessors(new MarketUpdate<Double, Integer>(null), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
@@ -61,7 +57,6 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		Future<MarketUpdate<Double, Integer>> future = asyncParallelProcessor.process(createQuote(23.0, 100));
@@ -81,7 +76,6 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		asyncParallelProcessor.shutdown();
@@ -99,7 +93,6 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
 		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
 		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
 		Assert.assertNull(asyncParallelProcessor.process(null));

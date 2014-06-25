@@ -9,7 +9,7 @@ import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
-import com.simulator.factory.FactoryUtility;
+import com.simulator.factory.InjectionManager;
 import com.simulator.util.MarketDepth;
 
 public class OrderBook {
@@ -18,7 +18,7 @@ public class OrderBook {
 	private Map<Double, Integer> aggregatedBids;
 	private Map<Double, Integer> aggregatedAsks;
 	
-	public OrderBook(FactoryUtility factoryUtility) {
+	public OrderBook(InjectionManager factoryUtility) {
 		this.bids = factoryUtility.createMarketDepth(Side.B);
 		this.asks = factoryUtility.createMarketDepth(Side.S);
 		this.aggregatedBids = new HashMap<>();
