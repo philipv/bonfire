@@ -10,7 +10,7 @@ import com.simulator.data.Quote;
 import com.simulator.factory.InjectionManager;
 import com.simulator.processor.task.CreateQuoteTask;
 
-public class AsyncParallelProcessor {
+public class AsyncParallelProcessor implements AsyncProcessor<Quote, MarketUpdate<Double, Long>>{
 	private List<MarketProcessor> marketProcessors;
 	private List<ExecutorService> singleThreadedExecutors;
 	private int cores;
@@ -28,6 +28,7 @@ public class AsyncParallelProcessor {
 		setSingleThreadedExecutors(Collections.unmodifiableList(singleThreadedExecutors));
 	}
 
+	@Override
 	public Future<MarketUpdate<Double, Long>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");
@@ -37,7 +38,7 @@ public class AsyncParallelProcessor {
 		}
 		return null;
 	}
-
+ 
 	public int getExecutorId(Object key) {
 		return key.hashCode()%cores;
 	}
@@ -50,6 +51,7 @@ public class AsyncParallelProcessor {
 		this.singleThreadedExecutors = singleThreadedExecutors;
 	}
 	
+	@Override
 	public void shutdown(){
 		for(ExecutorService singleThreadedExecutor:singleThreadedExecutors){
 			singleThreadedExecutor.shutdown();
