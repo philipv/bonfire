@@ -15,8 +15,8 @@ import com.simulator.util.MarketDepth;
 public class OrderBook {
 	private MarketDepth bids;
 	private MarketDepth asks;
-	private Map<Double, Integer> aggregatedBids;
-	private Map<Double, Integer> aggregatedAsks;
+	private Map<Double, Long> aggregatedBids;
+	private Map<Double, Long> aggregatedAsks;
 	
 	public OrderBook(InjectionManager factoryUtility) {
 		this.bids = factoryUtility.createMarketDepth(Side.B);
@@ -43,10 +43,10 @@ public class OrderBook {
 		}
 	}
 
-	public MarketUpdate<Double, Integer> placeOrder(Quote newQuote) {
+	public MarketUpdate<Double, Long> placeOrder(Quote newQuote) {
 		if(newQuote.getSide()!=null){
 			List<Trade> trades = new LinkedList<>();
-			MarketUpdate<Double, Integer> matchResult = new MarketUpdate<>(trades);
+			MarketUpdate<Double, Long> matchResult = new MarketUpdate<>(trades);
 			switch(newQuote.getSide()){
 				case B:
 					trades = asks.match(newQuote);
@@ -72,17 +72,17 @@ public class OrderBook {
 		}
 	}
 	
-	private void addOrUpdate(Quote quote, Map<Double, Integer> aggregatedView){
-		Integer aggregatedQuantity = aggregatedView.get(quote.getPrice());
+	private void addOrUpdate(Quote quote, Map<Double, Long> aggregatedView){
+		Long aggregatedQuantity = aggregatedView.get(quote.getPrice());
 		if(aggregatedQuantity==null){
-			aggregatedQuantity = 0;
+			aggregatedQuantity = 0L;
 		}
 		aggregatedQuantity = aggregatedQuantity + quote.getQuantity();
 		aggregatedView.put(quote.getPrice(), aggregatedQuantity);
 	}
 	
-	private void remove(Trade trade, Map<Double, Integer> aggregatedView){
-		Integer aggregatedQuantity = aggregatedView.get(trade.getPrice());
+	private void remove(Trade trade, Map<Double, Long> aggregatedView){
+		Long aggregatedQuantity = aggregatedView.get(trade.getPrice());
 		if(aggregatedQuantity!=null){
 			aggregatedQuantity = aggregatedQuantity - trade.getQuantity();
 			if(aggregatedQuantity<=0){

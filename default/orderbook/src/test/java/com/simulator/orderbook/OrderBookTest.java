@@ -47,7 +47,7 @@ public class OrderBookTest extends BaseUnitTest{
 	public void testFirstBuyQuote(){
 		Quote quote = createQuote(10.9, 250, Side.B);
 		when(bids.add(quote)).thenReturn(true);
-		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(quote);
 		verify(asks, times(1)).match(quote);//try to match once
 		verify(asks, times(0)).add(quote);
 		verify(bids, times(0)).match(quote);
@@ -62,7 +62,7 @@ public class OrderBookTest extends BaseUnitTest{
 	public void testFirstSellQuote(){
 		Quote quote = createQuote(10.9, 250, Side.S);
 		when(asks.add(quote)).thenReturn(true);
-		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(quote);
+		MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(quote);
 		verify(bids, times(1)).match(quote);
 		verify(bids, times(0)).add(quote);
 		verify(asks, times(0)).match(quote);
@@ -76,7 +76,7 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testMatchSellQuote(){
 		when(bids.add(any(Quote.class))).thenReturn(true);
-		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(createQuote(11.0, 75, Side.B));
+		MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(createQuote(11.0, 75, Side.B));
 		Assert.assertTrue(orderBookUpdate.getBidUpdates().size()==1);
 		orderBookUpdate = orderBook.placeOrder(createQuote(10.9, 175, Side.B));
 		Assert.assertTrue(orderBookUpdate.getBidUpdates().size()==2);
@@ -97,7 +97,7 @@ public class OrderBookTest extends BaseUnitTest{
 	@Test
 	public void testMatchBuyQuote(){
 		when(asks.add(any(Quote.class))).thenReturn(true);
-		MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(createQuote(11.0, 75, Side.S));
+		MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(createQuote(11.0, 75, Side.S));
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().size()==1);
 		orderBookUpdate = orderBook.placeOrder(createQuote(10.9, 175, Side.S));
 		Assert.assertTrue(orderBookUpdate.getAskUpdates().size()==2);

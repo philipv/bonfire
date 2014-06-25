@@ -20,21 +20,21 @@ public class BaseUnitTest {
 	@Mock
 	protected InjectionManager mockInjectionManager;
 	
-	protected Quote createQuote(double price, int quantity){
+	protected Quote createQuote(double price, long quantity){
 		Quote quote = new Quote();
 		quote.setPrice(price);
 		quote.setQuantity(quantity);
 		return quote;
 	}
 	
-	protected Trade createTrade(double price, int quantity){
+	protected Trade createTrade(double price, long quantity){
 		Trade trade = new Trade();
 		trade.setPrice(price);
 		trade.setQuantity(quantity);
 		return trade;
 	}
 	
-	protected Quote createQuote(double price, int quantity, Side side){
+	protected Quote createQuote(double price, long quantity, Side side){
 		Quote quote = createQuote(price, quantity);
 		quote.setSide(side);
 		return quote;

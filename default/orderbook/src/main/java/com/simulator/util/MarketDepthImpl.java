@@ -66,14 +66,14 @@ public class MarketDepthImpl implements MarketDepth{
 		trade.setPrice(quoteOnBook.getPrice());
 		
 		if(newQuote.getQuantity()>=quoteOnBook.getQuantity()){
-			int unfilledQuantity = newQuote.getQuantity() - quoteOnBook.getQuantity();
+			long unfilledQuantity = newQuote.getQuantity() - quoteOnBook.getQuantity();
 			trade.setQuantity(quoteOnBook.getQuantity());
 			newQuote.setQuantity(unfilledQuantity);
 			depth.poll();
 		}else{
-			int unfilledQuantity = quoteOnBook.getQuantity() - newQuote.getQuantity();
+			long unfilledQuantity = quoteOnBook.getQuantity() - newQuote.getQuantity();
 			trade.setQuantity(newQuote.getQuantity());
-			newQuote.setQuantity(0);
+			newQuote.setQuantity(0L);
 			quoteOnBook.setQuantity(unfilledQuantity);
 		}
 		return trade;

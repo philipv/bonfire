@@ -30,7 +30,7 @@ public class CommandLineOrderManagerTest extends BaseUnitTest{
 	private BufferedReader reader;
 	
 	@Mock
-	private Future<MarketUpdate<Double, Integer>> mockFuture;
+	private Future<MarketUpdate<Double, Long>> mockFuture;
 	
 	@Before
 	public void init(){

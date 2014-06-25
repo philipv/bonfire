@@ -24,11 +24,11 @@ public class AsyncParallelProcessor {
 		}
 	}
 
-	public Future<MarketUpdate<Double, Integer>> process(final Quote newQuote){
+	public Future<MarketUpdate<Double, Long>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");
 			CreateQuoteTask task = new CreateQuoteTask(marketProcessors[executorId], newQuote);
-			Future<MarketUpdate<Double, Integer>> createQuoteFuture = singleThreadedExecutors[executorId].submit(task);
+			Future<MarketUpdate<Double, Long>> createQuoteFuture = singleThreadedExecutors[executorId].submit(task);
 			return createQuoteFuture;	
 		}
 		return null;

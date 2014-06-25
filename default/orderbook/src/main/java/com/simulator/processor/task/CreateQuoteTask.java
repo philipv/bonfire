@@ -6,7 +6,7 @@ import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.processor.MarketProcessor;
 
-public class CreateQuoteTask implements Callable<MarketUpdate<Double, Integer>> {
+public class CreateQuoteTask implements Callable<MarketUpdate<Double, Long>> {
 	private final Quote newQuote;
 	private MarketProcessor marketProcessor;
 
@@ -16,8 +16,8 @@ public class CreateQuoteTask implements Callable<MarketUpdate<Double, Integer>> 
 	}
 
 	@Override
-	public MarketUpdate<Double, Integer> call() throws Exception {
-		MarketUpdate<Double, Integer> result = marketProcessor
+	public MarketUpdate<Double, Long> call() throws Exception {
+		MarketUpdate<Double, Long> result = marketProcessor
 				.createMarketOrder(newQuote);
 		return result;
 	}

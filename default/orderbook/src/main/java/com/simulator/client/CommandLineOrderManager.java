@@ -45,9 +45,9 @@ public class CommandLineOrderManager{
 				if(inputString.equals("quit"))
 					break;
 				
-				final Future<MarketUpdate<Double, Integer>> future = asyncMarketProcessor.process(processInput(inputString));
+				final Future<MarketUpdate<Double, Long>> future = asyncMarketProcessor.process(processInput(inputString));
 				if(future!=null){
-					asyncResultProcessor.submit(new UpdateProcessorTask(future));
+					asyncResultProcessor.submit(new UpdateProcessorTask<Double, Long>(future));
 				}
 			}
 		}catch(IOException e){
@@ -73,7 +73,7 @@ public class CommandLineOrderManager{
 			try{
 				Quote quote = new Quote();
 				quote.setPrice(Double.valueOf(inputs[2]));
-				quote.setQuantity(Integer.valueOf(inputs[1]));
+				quote.setQuantity(Long.valueOf(inputs[1]));
 				quote.setSide(Side.valueOf(inputs[0]));
 				return quote;
 			}catch(Exception e){

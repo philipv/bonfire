@@ -5,10 +5,10 @@ import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
 
-public class UpdateProcessorTask implements Runnable {
-	private final Future<MarketUpdate<Double, Integer>> future;
+public class UpdateProcessorTask<K, V> implements Runnable {
+	private final Future<MarketUpdate<K, V>> future;
 
-	public UpdateProcessorTask(Future<MarketUpdate<Double, Integer>> future) {
+	public UpdateProcessorTask(Future<MarketUpdate<K, V>> future) {
 		this.future = future;
 	}
 

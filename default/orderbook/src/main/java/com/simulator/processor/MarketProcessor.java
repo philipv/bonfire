@@ -17,7 +17,7 @@ public class MarketProcessor {
 		this.factoryUtility = factoryUtility;
 	}
 	
-	public MarketUpdate<Double, Integer> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
+	public MarketUpdate<Double, Long> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
 		try{
 			OrderBook orderBook = orderBooks.get(newQuote.getSymbol());
 			if(orderBook==null){
@@ -25,7 +25,7 @@ public class MarketProcessor {
 				orderBooks.put(newQuote.getSymbol(), orderBook);
 			}
 			
-			MarketUpdate<Double, Integer> orderBookUpdate = orderBook.placeOrder(newQuote);
+			MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(newQuote);
 			return orderBookUpdate;
 		}catch(RuntimeException ex){
 			if(ex instanceof IllegalArgumentException){

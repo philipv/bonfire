@@ -59,7 +59,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
-		Future<MarketUpdate<Double, Integer>> future = asyncParallelProcessor.process(createQuote(23.0, 100));
+		Future<MarketUpdate<Double, Long>> future = asyncParallelProcessor.process(createQuote(23.0, 100));
 		try{
 			future.get();
 			Assert.fail("Should not reach this point");
@@ -106,7 +106,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		for(int i=0;i<cores;i++){
 			mockProcessors[i] = mock(MarketProcessor.class);
 			if(sampleResult instanceof MarketUpdate){
-				when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenReturn((MarketUpdate<Double, Integer>)sampleResult);
+				when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenReturn((MarketUpdate<Double, Long>)sampleResult);
 			}else if(sampleResult instanceof Exception){
 				when(mockProcessors[i].createMarketOrder(any(Quote.class))).thenThrow((Exception)sampleResult);
 			}

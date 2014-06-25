@@ -2,13 +2,13 @@ package com.simulator.data;
 
 public class Trade extends MarketIdentity {
 
-	private Integer quantity;
+	private Long quantity;
 	private Double price;
-	public Integer getQuantity() {
+	public Long getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
 
