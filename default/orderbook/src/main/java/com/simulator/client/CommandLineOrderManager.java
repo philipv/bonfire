@@ -14,6 +14,12 @@ import com.simulator.factory.InjectionManager;
 import com.simulator.processor.IAsyncProcessor;
 import com.simulator.processor.task.UpdateProcessorTask;
 
+
+/**
+ * @author vinith
+ * This is a command line based order manager. It uses input from command line to feed to 
+ * a live limit order book.
+ */
 public class CommandLineOrderManager{
 	private static final String SEPARATOR = " ";
 	private static final int cores = 8;

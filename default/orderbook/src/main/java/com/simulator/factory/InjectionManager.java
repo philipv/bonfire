@@ -23,8 +23,12 @@ import com.simulator.util.DescendingComparator;
 import com.simulator.util.IMarketDepth;
 import com.simulator.util.MarketDepthImpl;
 
-/*
- * Utility class for creating different types of objects
+/**
+ * @author vinith
+ * This is a utility class which is being used in this project for object creation. In case you 
+ * have a dependency injection framework, the object here could be easily managed by the dependency 
+ * injection container. This class also helped maintaining clear seams between the class under test 
+ * and its collaborators and provide a handle to inject mocks easily in the tests.
  */
 public class InjectionManager {
 	
