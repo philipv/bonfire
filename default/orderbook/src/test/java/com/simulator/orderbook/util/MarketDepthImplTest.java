@@ -28,14 +28,14 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	public void init(){
 		bidDepth = new InjectionManager().createPriorityQueue(Side.B);
 		askDepth = new InjectionManager().createPriorityQueue(Side.S);
-		when(factoryUtility.createPriorityQueue(Side.B)).thenReturn(bidDepth);
-		when(factoryUtility.createPriorityQueue(Side.S)).thenReturn(askDepth);
+		when(mockInjectionManager.createPriorityQueue(Side.B)).thenReturn(bidDepth);
+		when(mockInjectionManager.createPriorityQueue(Side.S)).thenReturn(askDepth);
 		marketDepth = null;
 	}
 	
 	@Test
 	public void placeBuyQuote(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.B);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.B);
 		double[] buyPricesInDesc = new double[]{10.1, 10, 9.9};
 		int[][] buyQuantities = new int[][]{{100, 10}, {1000}, {100}};
 		
@@ -45,7 +45,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 
 	@Test
 	public void placeSellQuote(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.S);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		double[] sellPricesInAsc = new double[]{9.9, 10.0};
 		int[][] sellQuantities = new int[][]{{100, 10}, {1000}};
 		
@@ -55,7 +55,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 
 	@Test
 	public void matchSellQuoteWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.B);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
 		int[][] buyQuantitiesInBook = new int[][]{{1000}, {100}};
@@ -67,7 +67,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.S);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10.0, 9.9};
 		int[][] sellQuantitiesInBook = new int[][]{{1000}, {200}};
@@ -79,7 +79,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void matchSellQuoteOnMultiplePriceLevelWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.B);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
 		int[][] buyQuantitiesInBook = new int[][]{{100}, {1000}};
@@ -91,7 +91,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteOnMultiplePriceLevelWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.S);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10.0, 9.9};
 		int[][] sellQuantitiesInBook = new int[][]{{1000}, {200}};
@@ -103,7 +103,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void matchSellQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.B);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.B);
 		
 		double[] buyPricesInBook = new double[]{10, 9.9};
 		int[][] buyQuantitiesInBook = new int[][]{{100, 150}, {1000}};
@@ -115,7 +115,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void matchBuyQuoteOnMultipleQuotesOnSamePriceLevelWithResidualOnDepth(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.S);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		
 		double[] sellPricesInBook = new double[]{10, 9.9};
 		int[][] sellQuantitiesInBook = new int[][]{{1000}, {10, 260}};
@@ -127,7 +127,7 @@ public class MarketDepthImplTest extends BaseUnitTest{
 	
 	@Test
 	public void testWrongInput(){
-		marketDepth = new MarketDepthImpl(factoryUtility, Side.S);
+		marketDepth = new MarketDepthImpl(mockInjectionManager, Side.S);
 		
 		Quote quote = createQuote(9.9, 200);
 		quote.setPrice(null);

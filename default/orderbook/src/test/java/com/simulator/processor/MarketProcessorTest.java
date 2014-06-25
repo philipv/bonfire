@@ -26,25 +26,25 @@ public class MarketProcessorTest extends BaseUnitTest{
 	
 	@Before
 	public void init(){
-		when(factoryUtility.createOrderBookPerSymbol()).thenReturn(orderBooks);
-		marketProcessor = new MarketProcessor(factoryUtility);
+		when(mockInjectionManager.createOrderBookPerSymbol()).thenReturn(orderBooks);
+		marketProcessor = new MarketProcessor(mockInjectionManager);
 	}
 	
 	@Test
 	public void testRepetitiveQuote() throws ProcessingFailedException{
 		OrderBook mockOrderBook = mock(OrderBook.class);
-		when(factoryUtility.createOrderBook()).thenReturn(mockOrderBook);
+		when(mockInjectionManager.createOrderBook()).thenReturn(mockOrderBook);
 		when(orderBooks.get(null)).thenReturn(null, mockOrderBook);
 		Quote newQuote = createQuote(10.0, 25);
 		marketProcessor.createMarketOrder(newQuote);
 		verify(orderBooks, times(1)).get(any(String.class));
 		verify(orderBooks, times(1)).put(any(String.class), any(OrderBook.class));
-		verify(factoryUtility, times(1)).createOrderBook();
+		verify(mockInjectionManager, times(1)).createOrderBook();
 		verify(mockOrderBook, times(1)).placeOrder(newQuote);
 		marketProcessor.createMarketOrder(newQuote);
 		verify(orderBooks, times(2)).get(any(String.class));
 		verify(orderBooks, times(1)).put(any(String.class), any(OrderBook.class));
-		verify(factoryUtility, times(1)).createOrderBook();
+		verify(mockInjectionManager, times(1)).createOrderBook();
 		verify(mockOrderBook, times(2)).placeOrder(newQuote);
 	}
 	
@@ -53,7 +53,7 @@ public class MarketProcessorTest extends BaseUnitTest{
 		Quote newQuote = createQuote(10.0, 25);
 		for(Exception exception:new Exception[]{new RuntimeException(), new IllegalArgumentException()}){
 			OrderBook mockOrderBook = mock(OrderBook.class);
-			when(factoryUtility.createOrderBook()).thenReturn(mockOrderBook);
+			when(mockInjectionManager.createOrderBook()).thenReturn(mockOrderBook);
 			when(orderBooks.get(null)).thenReturn(mockOrderBook);
 			when(mockOrderBook.placeOrder(newQuote)).thenThrow(exception);
 			try{

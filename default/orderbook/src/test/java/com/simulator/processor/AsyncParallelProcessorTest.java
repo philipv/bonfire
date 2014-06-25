@@ -26,26 +26,26 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 
 	@Before
 	public void init(){
-		when(factoryUtility.createSingleThreadedExecutor()).thenCallRealMethod();
-		when(factoryUtility.createMultiExecutors(cores)).thenCallRealMethod();
+		when(mockInjectionManager.createSingleThreadedExecutor()).thenCallRealMethod();
+		when(mockInjectionManager.createMultiExecutors(cores)).thenCallRealMethod();
 	}
 	
 	@Test
 	public void testCreatedParallelMarketOrders(){
-		when(factoryUtility.createMultiMarketProcessors(cores)).thenCallRealMethod();
-		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
-		verify(factoryUtility, times(cores)).createMarketProcessor();
-		verify(factoryUtility, times(cores)).createSingleThreadedExecutor();
+		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenCallRealMethod();
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
+		verify(mockInjectionManager, times(cores)).createMarketProcessor();
+		verify(mockInjectionManager, times(cores)).createSingleThreadedExecutor();
 	}
 	
 	@Test
 	public void testRepetiveQuotesForSameSymbolGoToSameProcessor() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
 		createMockProcessors(new MarketUpdate<Double, Integer>(null), mockProcessors);
-		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
-		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(mockInjectionManager.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		
-		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
 		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
 		verify(mockProcessors[0], times(2)).createMarketOrder(any(Quote.class));
@@ -55,10 +55,10 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 	public void testPassingExceptionToClient() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
-		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
-		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(mockInjectionManager.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		
-		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		Future<MarketUpdate<Double, Integer>> future = asyncParallelProcessor.process(createQuote(23.0, 100));
 		try{
 			future.get();
@@ -74,10 +74,10 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 	public void testExecutorShutdown() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
-		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
-		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(mockInjectionManager.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		
-		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		asyncParallelProcessor.shutdown();
 		try{
 			asyncParallelProcessor.process(createQuote(23.0, 100));
@@ -91,10 +91,10 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 	public void testInvalidInput() throws ProcessingFailedException, InterruptedException, ExecutionException{
 		MarketProcessor[] mockProcessors = new MarketProcessor[4];
 		createMockProcessors(new ProcessingFailedException(), mockProcessors);
-		when(factoryUtility.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
-		when(factoryUtility.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
+		when(mockInjectionManager.createMarketProcessor()).thenReturn(mockProcessors[0], mockProcessors[1], mockProcessors[2], mockProcessors[3]);
+		when(mockInjectionManager.createMultiMarketProcessors(cores)).thenReturn(mockProcessors);
 		
-		asyncParallelProcessor = new AsyncParallelProcessor(cores, factoryUtility);
+		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		Assert.assertNull(asyncParallelProcessor.process(null));
 		verify(mockProcessors[0], times(0)).createMarketOrder(any(Quote.class));
 	}

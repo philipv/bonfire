@@ -18,7 +18,7 @@ import com.simulator.factory.InjectionManager;
 public class BaseUnitTest {
 	
 	@Mock
-	protected InjectionManager factoryUtility;
+	protected InjectionManager mockInjectionManager;
 	
 	protected Quote createQuote(double price, int quantity){
 		Quote quote = new Quote();

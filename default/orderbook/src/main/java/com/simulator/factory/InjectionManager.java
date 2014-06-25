@@ -12,6 +12,7 @@ import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.orderbook.OrderBook;
+import com.simulator.processor.AsyncParallelProcessor;
 import com.simulator.processor.MarketProcessor;
 import com.simulator.util.AscendingComparator;
 import com.simulator.util.DescendingComparator;
@@ -69,6 +70,10 @@ public class InjectionManager {
 	
 	public ExecutorService[] createMultiExecutors(int cores) {
 		return new ExecutorService[cores];
+	}
+	
+	public AsyncParallelProcessor createAsyncProcessor(int cores) {
+		return new AsyncParallelProcessor(cores, this);
 	}
 	
 }

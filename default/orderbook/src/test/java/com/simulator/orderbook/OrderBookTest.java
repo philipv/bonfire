@@ -31,9 +31,9 @@ public class OrderBookTest extends BaseUnitTest{
 	
 	@Before
 	public void init(){
-		when(factoryUtility.createMarketDepth(Side.B)).thenReturn(bids);
-		when(factoryUtility.createMarketDepth(Side.S)).thenReturn(asks);
-		orderBook = new OrderBook(factoryUtility);
+		when(mockInjectionManager.createMarketDepth(Side.B)).thenReturn(bids);
+		when(mockInjectionManager.createMarketDepth(Side.S)).thenReturn(asks);
+		orderBook = new OrderBook(mockInjectionManager);
 	}
 	
 	@After

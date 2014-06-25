@@ -1,50 +1,35 @@
 package com.simulator.processor;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.factory.InjectionManager;
+import com.simulator.processor.task.CreateQuoteTask;
 
 public class AsyncParallelProcessor {
-	private final class QuoteTask implements
-			Callable<MarketUpdate<Double, Integer>> {
-		private final Quote newQuote;
-		private MarketProcessor marketProcessor;
-
-		private QuoteTask(MarketProcessor marketProcessor, Quote newQuote) {
-			this.marketProcessor = marketProcessor;
-			this.newQuote = newQuote;
-		}
-
-		@Override
-		public MarketUpdate<Double, Integer> call() throws Exception {
-			MarketUpdate<Double, Integer> result = marketProcessor.createMarketOrder(newQuote);
-			return result;
-		}
-	}
-
 	private MarketProcessor[] marketProcessors;
 	private ExecutorService[] singleThreadedExecutors;
 	private int cores;
 	
-	public AsyncParallelProcessor(int cores, InjectionManager factoryUtility) {
+	public AsyncParallelProcessor(int cores, InjectionManager injectionManager) {
 		this.cores = cores;
-		setMarketProcessors(factoryUtility.createMultiMarketProcessors(cores));
-		setSingleThreadedExecutors(factoryUtility.createMultiExecutors(cores));
+		setMarketProcessors(injectionManager.createMultiMarketProcessors(cores));
+		setSingleThreadedExecutors(injectionManager.createMultiExecutors(cores));
 		
 		for(int i=0;i<cores;i++){
-			marketProcessors[i] = factoryUtility.createMarketProcessor();
-			singleThreadedExecutors[i] = factoryUtility.createSingleThreadedExecutor();
+			marketProcessors[i] = injectionManager.createMarketProcessor();
+			singleThreadedExecutors[i] = injectionManager.createSingleThreadedExecutor();
 		}
 	}
 
 	public Future<MarketUpdate<Double, Integer>> process(final Quote newQuote){
 		if(newQuote!=null){
 			final int executorId = newQuote.getSymbol()!=null?getExecutorId(newQuote.getSymbol()):getExecutorId("");
-			return singleThreadedExecutors[executorId].submit(new QuoteTask(marketProcessors[executorId], newQuote));	
+			CreateQuoteTask task = new CreateQuoteTask(marketProcessors[executorId], newQuote);
+			Future<MarketUpdate<Double, Integer>> createQuoteFuture = singleThreadedExecutors[executorId].submit(task);
+			return createQuoteFuture;	
 		}
 		return null;
 	}
