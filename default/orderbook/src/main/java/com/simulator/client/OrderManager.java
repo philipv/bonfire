@@ -15,13 +15,6 @@ import com.simulator.data.Side;
 import com.simulator.factory.FactoryUtility;
 import com.simulator.processor.AsyncParallelProcessor;
 
-/*
- * This component is responsible for:
- *  - Getting the update from different sources.
- *  - Convert the update into a position
- *  - Notify the required listeners.
- *  - This class could be overridden by any other source of updates. Just override convert and getObserver (only if required)
- */
 public class OrderManager{
 	private final class UpdateProcessorTask implements Runnable {
 		private final Future<MarketUpdate<Double, Integer>> future;
@@ -92,8 +85,6 @@ public class OrderManager{
 		}
 	
 	}
-
-	private void read(InputStreamReader inputStreamReader) {}
 
 	public Quote processInput(String inputString){
 		String[] inputs = inputString.split(SEPARATOR);

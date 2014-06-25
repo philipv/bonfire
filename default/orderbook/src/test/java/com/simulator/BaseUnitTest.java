@@ -4,14 +4,22 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
+import com.simulator.factory.FactoryUtility;
 
 
 public class BaseUnitTest {
+	
+	@Mock
+	protected FactoryUtility factoryUtility;
+	
 	protected Quote createQuote(double price, int quantity){
 		Quote quote = new Quote();
 		quote.setPrice(price);
@@ -30,6 +38,11 @@ public class BaseUnitTest {
 		Quote quote = createQuote(price, quantity);
 		quote.setSide(side);
 		return quote;
+	}
+	
+	@Before
+	public void baseInit(){
+		MockitoAnnotations.initMocks(this);
 	}
 	
 	protected void assertTradeDetails(List<Trade> trades, double[] expectedPrices, int[] expectedQuantities){

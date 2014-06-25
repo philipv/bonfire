@@ -12,12 +12,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.simulator.BaseUnitTest;
 import com.simulator.data.Quote;
 import com.simulator.exception.ProcessingFailedException;
-import com.simulator.factory.FactoryUtility;
 import com.simulator.orderbook.OrderBook;
 
 public class MarketProcessorTest extends BaseUnitTest{
@@ -26,13 +24,10 @@ public class MarketProcessorTest extends BaseUnitTest{
 	@Mock
 	private Map<String, OrderBook> orderBooks;
 	
-	@Mock
-	private FactoryUtility factoryUtility;
-	
 	@Before
 	public void init(){
-		MockitoAnnotations.initMocks(this);
-		marketProcessor = new MarketProcessor(orderBooks, factoryUtility);
+		when(factoryUtility.createOrderBookPerSymbol()).thenReturn(orderBooks);
+		marketProcessor = new MarketProcessor(factoryUtility);
 	}
 	
 	@Test

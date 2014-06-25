@@ -12,8 +12,8 @@ public class MarketProcessor {
 	private Map<String, OrderBook> orderBooks;
 	private FactoryUtility factoryUtility;
 
-	public MarketProcessor(Map<String, OrderBook> orderBooks, FactoryUtility factoryUtility) {
-		this.orderBooks = orderBooks;
+	public MarketProcessor(FactoryUtility factoryUtility) {
+		this.orderBooks = factoryUtility.createOrderBookPerSymbol();
 		this.factoryUtility = factoryUtility;
 	}
 	

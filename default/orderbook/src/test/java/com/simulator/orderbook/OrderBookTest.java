@@ -1,6 +1,9 @@
 package com.simulator.orderbook;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
@@ -8,25 +11,29 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import com.simulator.BaseUnitTest;
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
-import com.simulator.util.MarketDepth;
+import com.simulator.util.MarketDepthImpl;
 
 public class OrderBookTest extends BaseUnitTest{
 
 	private OrderBook orderBook;
 	
-	private MarketDepth bids;
-	private MarketDepth asks;
+	@Mock
+	private MarketDepthImpl bids;
+	
+	@Mock
+	private MarketDepthImpl asks;
 	
 	@Before
 	public void init(){
-		bids = mock(MarketDepth.class);
-		asks = mock(MarketDepth.class);
-		orderBook = new OrderBook(bids, asks);
+		when(factoryUtility.createMarketDepth(Side.B)).thenReturn(bids);
+		when(factoryUtility.createMarketDepth(Side.S)).thenReturn(asks);
+		orderBook = new OrderBook(factoryUtility);
 	}
 	
 	@After
