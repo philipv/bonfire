@@ -10,11 +10,11 @@ import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.data.Trade;
 import com.simulator.factory.InjectionManager;
-import com.simulator.util.MarketDepth;
+import com.simulator.util.IMarketDepth;
 
 public class OrderBook {
-	private MarketDepth bids;
-	private MarketDepth asks;
+	private IMarketDepth bids;
+	private IMarketDepth asks;
 	private Map<Double, Long> aggregatedBids;
 	private Map<Double, Long> aggregatedAsks;
 	

@@ -10,7 +10,7 @@ import com.simulator.data.Quote;
 import com.simulator.factory.InjectionManager;
 import com.simulator.processor.task.CreateQuoteTask;
 
-public class AsyncParallelProcessor implements AsyncProcessor<Quote, MarketUpdate<Double, Long>>{
+public class AsyncParallelProcessor implements IAsyncProcessor<Quote, MarketUpdate<Double, Long>>{
 	private List<MarketProcessor> marketProcessors;
 	private List<ExecutorService> singleThreadedExecutors;
 	private int cores;

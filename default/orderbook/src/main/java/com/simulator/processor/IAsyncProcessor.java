@@ -2,7 +2,7 @@ package com.simulator.processor;
 
 import java.util.concurrent.Future;
 
-public interface AsyncProcessor<T, R> {
+public interface IAsyncProcessor<T, R> {
 
 	Future<R> process(T marketIdentity);
 

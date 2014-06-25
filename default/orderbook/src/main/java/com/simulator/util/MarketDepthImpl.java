@@ -10,7 +10,7 @@ import com.simulator.data.Side;
 import com.simulator.data.Trade;
 import com.simulator.factory.InjectionManager;
 
-public class MarketDepthImpl implements MarketDepth{
+public class MarketDepthImpl implements IMarketDepth{
 	private static final double ALLOWED_DECIMAL_PLACES = 3;
 	private PriorityQueue<Sequenceable<Quote>> depth;
 	private IMatcher matcher;

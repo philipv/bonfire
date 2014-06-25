@@ -10,15 +10,17 @@ import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.orderbook.OrderBook;
 import com.simulator.processor.AsyncParallelProcessor;
+import com.simulator.processor.IAsyncProcessor;
 import com.simulator.processor.MarketProcessor;
 import com.simulator.util.AscendingComparator;
 import com.simulator.util.DescendingComparator;
-import com.simulator.util.MarketDepth;
+import com.simulator.util.IMarketDepth;
 import com.simulator.util.MarketDepthImpl;
 
 /*
@@ -30,7 +32,7 @@ public class InjectionManager {
 		return new BufferedReader(inputStreamReader);
 	}
 	
-	public MarketDepth createMarketDepth(Side side){
+	public IMarketDepth createMarketDepth(Side side){
 		switch(side){
 			case B: 
 				return new MarketDepthImpl(this, Side.B);
@@ -74,7 +76,7 @@ public class InjectionManager {
 		return new ArrayList<ExecutorService>(cores);
 	}
 	
-	public AsyncParallelProcessor createAsyncProcessor(int cores) {
+	public IAsyncProcessor<Quote, MarketUpdate<Double, Long>> createAsyncProcessor(int cores) {
 		return new AsyncParallelProcessor(cores, this);
 	}
 	

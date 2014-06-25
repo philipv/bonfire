@@ -11,14 +11,14 @@ import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.factory.InjectionManager;
-import com.simulator.processor.AsyncProcessor;
+import com.simulator.processor.IAsyncProcessor;
 import com.simulator.processor.task.UpdateProcessorTask;
 
 public class CommandLineOrderManager{
 	private static final String SEPARATOR = " ";
 	private static final int cores = 8;
 	private InjectionManager injectionManager;
-	private AsyncProcessor<Quote, MarketUpdate<Double, Long>> asyncMarketProcessor;
+	private IAsyncProcessor<Quote, MarketUpdate<Double, Long>> asyncMarketProcessor;
 	private ExecutorService asyncResultProcessor;
 	
 	public static void main(String[] args) throws FileNotFoundException{
