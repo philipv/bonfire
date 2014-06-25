@@ -10,6 +10,12 @@ import com.simulator.data.Quote;
 import com.simulator.factory.InjectionManager;
 import com.simulator.processor.task.CreateQuoteTask;
 
+/**
+ * @author vinith
+ * This is an IAsyncProcessor implementation which uses ExecutorService to dispatch tasks to a 
+ * separate thread for processing. This class is thread safe and could be used by multiple threads.
+ * This takes a Quote and returns a MarketUpdate.
+ */
 public class AsyncParallelProcessor implements IAsyncProcessor<Quote, MarketUpdate<Double, Long>>{
 	private List<MarketProcessor> marketProcessors;
 	private List<ExecutorService> singleThreadedExecutors;
@@ -28,6 +34,13 @@ public class AsyncParallelProcessor implements IAsyncProcessor<Quote, MarketUpda
 		setSingleThreadedExecutors(Collections.unmodifiableList(singleThreadedExecutors));
 	}
 
+	/**
+	 * This method is to dispatch the newQuote to a separate thread(from the calling thread).
+	 * This method ensure that subsequent quotes for same symbol go to the same thread and to do 
+	 * that it uses a modulus of hashCode on the symbol of the quote. This can also accept a null 
+	 * symbol and still continue to dispatch without any issues.
+	 * @see com.simulator.processor.IAsyncProcessor#process(java.lang.Object)
+	 */
 	@Override
 	public Future<MarketUpdate<Double, Long>> process(final Quote newQuote){
 		if(newQuote!=null){
@@ -51,6 +64,10 @@ public class AsyncParallelProcessor implements IAsyncProcessor<Quote, MarketUpda
 		this.singleThreadedExecutors = singleThreadedExecutors;
 	}
 	
+	/** 
+	 * This is to shutdown all the executor services in case of a process shutdown.
+	 * @see com.simulator.processor.IAsyncProcessor#shutdown()
+	 */
 	@Override
 	public void shutdown(){
 		for(ExecutorService singleThreadedExecutor:singleThreadedExecutors){

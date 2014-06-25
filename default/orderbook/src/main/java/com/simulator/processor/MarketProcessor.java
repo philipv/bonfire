@@ -30,7 +30,7 @@ public class MarketProcessor {
 	 * place on the market depth
 	 * @param newQuote
 	 * @return marketUpdate - consolidated view of impact of this new quote on market
-	 * @throws ProcessingFailedException
+	 * @throws ProcessingFailedException : This wraps any error thrown by the layer underneath
 	 */
 	public MarketUpdate<Double, Long> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
 		try{

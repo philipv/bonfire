@@ -53,7 +53,8 @@ public class OrderBook {
 	/**
 	 * This method tries to match quotes from opposite side and then if there is any residual quantity
 	 * on the new quote then it will place that on the same side. This also manages the aggregated trade 
-	 * size for every price level on the book
+	 * size for every price level on the book. Throws IllegalArgumentException in case side is not 
+	 * mentioned on the quote.
 	 * @param newQuote
 	 * @return marketUpdate - consolidated view of impact of this new quote on market
 	 */
