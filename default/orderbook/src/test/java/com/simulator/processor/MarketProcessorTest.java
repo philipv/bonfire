@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.simulator.BaseUnitTest;
+import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.exception.ProcessingFailedException;
 import com.simulator.orderbook.OrderBook;
@@ -33,6 +34,7 @@ public class MarketProcessorTest extends BaseUnitTest{
 	@Test
 	public void testRepetitiveQuote() throws ProcessingFailedException{
 		OrderBook mockOrderBook = mock(OrderBook.class);
+		when(mockOrderBook.placeOrder(any(Quote.class))).thenReturn(new MarketUpdate<Double, Long>(null));
 		when(mockInjectionManager.createOrderBook()).thenReturn(mockOrderBook);
 		when(orderBooks.get(null)).thenReturn(null, mockOrderBook);
 		Quote newQuote = createQuote(10.0, 25);

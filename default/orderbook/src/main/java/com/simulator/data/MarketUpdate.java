@@ -46,7 +46,8 @@ public class MarketUpdate<K,V> extends MarketIdentity{
 	}
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(getSymbol()).append("\n");
+		StringBuilder sb = new StringBuilder();
+		sb.append(getSymbol()==null?"":getSymbol()).append("\n");
 		if(trades!=null && !trades.isEmpty()){
 			sb.append("Trades\n").append(LINE_SEPARATOR);
 			for(Trade trade:trades){

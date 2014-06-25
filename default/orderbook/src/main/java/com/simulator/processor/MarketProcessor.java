@@ -42,7 +42,7 @@ public class MarketProcessor {
 			}
 			
 			MarketUpdate<Double, Long> orderBookUpdate = orderBook.placeOrder(newQuote);
-			orderBookUpdate.setSymbol(symbol==null?"":symbol);
+			orderBookUpdate.setSymbol(symbol);
 			return orderBookUpdate;
 		}catch(RuntimeException ex){
 			if(ex instanceof IllegalArgumentException){
