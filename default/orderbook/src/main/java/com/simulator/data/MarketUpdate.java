@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class MarketUpdate<K,V> extends MarketIdentity{
-	private static final String LINE_SEPARATOR = "------------------------------------\n";
+	private static final String LINE_SEPARATOR = "----------------------------------------------\n";
 	private static final int PADDING = 20;
 	private List<Trade> trades;
 	private Map<K, V> bidUpdates;
