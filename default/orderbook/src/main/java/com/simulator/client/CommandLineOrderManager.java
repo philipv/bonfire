@@ -11,7 +11,7 @@ import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
 import com.simulator.data.Side;
 import com.simulator.factory.InjectionManager;
-import com.simulator.processor.IAsyncProcessor;
+import com.simulator.processor.IProcessor;
 import com.simulator.processor.task.UpdateProcessorTask;
 
 
@@ -24,7 +24,7 @@ public class CommandLineOrderManager{
 	private static final String SEPARATOR = " ";
 	private static final int cores = 8;
 	private InjectionManager injectionManager;
-	private IAsyncProcessor<Quote, MarketUpdate<Double, Long>> asyncMarketProcessor;
+	private IProcessor<Quote, Future<MarketUpdate<Double, Long>>> asyncMarketProcessor;
 	private ExecutorService asyncResultProcessor;
 	
 	public static void main(String[] args) throws FileNotFoundException{
@@ -56,6 +56,9 @@ public class CommandLineOrderManager{
 			}
 		}catch(IOException e){
 			System.out.println("Cannot read from the input stream. Program will exit now");
+			e.printStackTrace();
+		}catch (Exception e) {
+			System.out.println("Couldn't process the quote");
 			e.printStackTrace();
 		}finally{
 			asyncMarketProcessor.shutdown();

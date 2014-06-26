@@ -50,7 +50,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
 		asyncParallelProcessor.process(createQuote(23.0, 100)).get();
-		verify(mockProcessors.get(0), times(2)).createMarketOrder(any(Quote.class));
+		verify(mockProcessors.get(0), times(2)).process(any(Quote.class));
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 			Assert.assertTrue(e instanceof ExecutionException);
 			Assert.assertTrue(e.getCause() instanceof ProcessingFailedException);
 		}
-		verify(mockProcessors.get(0), times(1)).createMarketOrder(any(Quote.class));
+		verify(mockProcessors.get(0), times(1)).process(any(Quote.class));
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		
 		asyncParallelProcessor = new AsyncParallelProcessor(cores, mockInjectionManager);
 		Assert.assertNull(asyncParallelProcessor.process(null));
-		verify(mockProcessors.get(0), times(0)).createMarketOrder(any(Quote.class));
+		verify(mockProcessors.get(0), times(0)).process(any(Quote.class));
 	}
 
 	public void createMockProcessors(
@@ -108,9 +108,9 @@ public class AsyncParallelProcessorTest extends BaseUnitTest{
 		for(int i=0;i<cores;i++){
 			mockProcessors.add(mock(MarketProcessor.class));
 			if(sampleResult instanceof MarketUpdate){
-				when(mockProcessors.get(i).createMarketOrder(any(Quote.class))).thenReturn((MarketUpdate<Double, Long>)sampleResult);
+				when(mockProcessors.get(i).process(any(Quote.class))).thenReturn((MarketUpdate<Double, Long>)sampleResult);
 			}else if(sampleResult instanceof Exception){
-				when(mockProcessors.get(i).createMarketOrder(any(Quote.class))).thenThrow((Exception)sampleResult);
+				when(mockProcessors.get(i).process(any(Quote.class))).thenThrow((Exception)sampleResult);
 			}
 		}
 	}

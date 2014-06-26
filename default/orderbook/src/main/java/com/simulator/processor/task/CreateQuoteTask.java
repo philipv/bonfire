@@ -4,13 +4,13 @@ import java.util.concurrent.Callable;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
-import com.simulator.processor.MarketProcessor;
+import com.simulator.processor.IProcessor;
 
 public class CreateQuoteTask implements Callable<MarketUpdate<Double, Long>> {
 	private final Quote newQuote;
-	private MarketProcessor marketProcessor;
+	private IProcessor<Quote, MarketUpdate<Double, Long>> marketProcessor;
 
-	public CreateQuoteTask(MarketProcessor marketProcessor, Quote newQuote) {
+	public CreateQuoteTask(IProcessor<Quote, MarketUpdate<Double, Long>> marketProcessor, Quote newQuote) {
 		this.marketProcessor = marketProcessor;
 		this.newQuote = newQuote;
 	}
@@ -18,7 +18,7 @@ public class CreateQuoteTask implements Callable<MarketUpdate<Double, Long>> {
 	@Override
 	public MarketUpdate<Double, Long> call() throws Exception {
 		MarketUpdate<Double, Long> result = marketProcessor
-				.createMarketOrder(newQuote);
+				.process(newQuote);
 		return result;
 	}
 }

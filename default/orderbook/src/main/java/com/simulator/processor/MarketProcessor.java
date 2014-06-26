@@ -15,7 +15,7 @@ import com.simulator.orderbook.OrderBook;
  * can run parallely on multiple threads. There is no data sharing above this layer(for a new incoming quote) and hence 
  * could be used to process quotes(lying in different buckets) parallely.
  */
-public class MarketProcessor {
+public class MarketProcessor implements IProcessor<Quote, MarketUpdate<Double, Long>> {
 	
 	private Map<String, OrderBook> orderBooks;
 	private InjectionManager factoryUtility;
@@ -32,7 +32,7 @@ public class MarketProcessor {
 	 * @return marketUpdate - consolidated view of impact of this new quote on market
 	 * @throws ProcessingFailedException : This wraps any error thrown by the layer underneath
 	 */
-	public MarketUpdate<Double, Long> createMarketOrder(Quote newQuote) throws ProcessingFailedException{
+	public MarketUpdate<Double, Long> process(Quote newQuote) throws ProcessingFailedException{
 		try{
 			String symbol = newQuote.getSymbol();
 			OrderBook orderBook = orderBooks.get(symbol);
@@ -52,6 +52,11 @@ public class MarketProcessor {
 			}
 	
 		}
+	}
+
+	@Override
+	public void shutdown() {
+		// TODO Nothing to do here
 	}
 	
 }

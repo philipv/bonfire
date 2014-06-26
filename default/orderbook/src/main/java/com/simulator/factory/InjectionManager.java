@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.simulator.data.MarketUpdate;
 import com.simulator.data.Quote;
@@ -16,7 +17,7 @@ import com.simulator.data.Sequenceable;
 import com.simulator.data.Side;
 import com.simulator.orderbook.OrderBook;
 import com.simulator.processor.AsyncParallelProcessor;
-import com.simulator.processor.IAsyncProcessor;
+import com.simulator.processor.IProcessor;
 import com.simulator.processor.MarketProcessor;
 import com.simulator.util.AscendingComparator;
 import com.simulator.util.DescendingComparator;
@@ -80,7 +81,7 @@ public class InjectionManager {
 		return new ArrayList<ExecutorService>(cores);
 	}
 	
-	public IAsyncProcessor<Quote, MarketUpdate<Double, Long>> createAsyncProcessor(int cores) {
+	public IProcessor<Quote, Future<MarketUpdate<Double, Long>>> createAsyncProcessor(int cores) {
 		return new AsyncParallelProcessor(cores, this);
 	}
 	

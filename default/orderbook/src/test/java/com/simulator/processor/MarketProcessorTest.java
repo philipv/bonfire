@@ -38,12 +38,12 @@ public class MarketProcessorTest extends BaseUnitTest{
 		when(mockInjectionManager.createOrderBook()).thenReturn(mockOrderBook);
 		when(orderBooks.get(null)).thenReturn(null, mockOrderBook);
 		Quote newQuote = createQuote(10.0, 25);
-		marketProcessor.createMarketOrder(newQuote);
+		marketProcessor.process(newQuote);
 		verify(orderBooks, times(1)).get(any(String.class));
 		verify(orderBooks, times(1)).put(any(String.class), any(OrderBook.class));
 		verify(mockInjectionManager, times(1)).createOrderBook();
 		verify(mockOrderBook, times(1)).placeOrder(newQuote);
-		marketProcessor.createMarketOrder(newQuote);
+		marketProcessor.process(newQuote);
 		verify(orderBooks, times(2)).get(any(String.class));
 		verify(orderBooks, times(1)).put(any(String.class), any(OrderBook.class));
 		verify(mockInjectionManager, times(1)).createOrderBook();
@@ -59,7 +59,7 @@ public class MarketProcessorTest extends BaseUnitTest{
 			when(orderBooks.get(null)).thenReturn(mockOrderBook);
 			when(mockOrderBook.placeOrder(newQuote)).thenThrow(exception);
 			try{
-				marketProcessor.createMarketOrder(newQuote);
+				marketProcessor.process(newQuote);
 				Assert.fail();
 			}catch(Exception ex){
 				Assert.assertTrue(ex instanceof ProcessingFailedException);
