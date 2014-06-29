@@ -43,8 +43,13 @@ public class PerformanceTest extends BaseUnitTest{
 				@Override
 				public void run() {
 					try{
-						future.get();
-						counter.countDown();
+						if(future.get()!=null){
+							counter.countDown();
+							long count = counter.getCount();
+							if(count%100000==0)
+								System.out.println(max_ticks - count);
+							
+						}
 					}catch(Exception e){
 						e.printStackTrace();
 					}
