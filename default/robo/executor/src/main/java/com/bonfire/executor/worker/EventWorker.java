@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.StandardMBean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class EventWorker<T extends Runnable> implements ManagedExecutor {
 		this.scheduledExecutorService = injector.createExecutors();
 		this.mBeanServer = injector.createMBeanServer();
 		try {
-			mBeanServer.registerMBean(this, new ObjectName("SimpleAgent:name=" + getClass().getName()));
+			mBeanServer.registerMBean(new StandardMBean(this, ManagedExecutor.class), new ObjectName(getClass().getPackage() +":name=" + getClass().getSimpleName()));
 		} catch (Exception e) {
 			LOGGER.warn("Cannot monitor this executor due to failure in registration", e);
 		} 
