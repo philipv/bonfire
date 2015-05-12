@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bonfire.injector.DependencyInjector;
 
-public class EventWorker<T extends Runnable> implements ManagedExecutor {
+public class EventWorker<T extends Runnable> implements ManagedExecutor, Worker<T> {
 	private ScheduledExecutorService scheduledExecutorService;
 	private MBeanServer mBeanServer;
 	private ObjectName mBeanName;
@@ -36,20 +36,48 @@ public class EventWorker<T extends Runnable> implements ManagedExecutor {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.bonfire.executor.worker.Worker#submit(T)
+	 */
+	@Override
 	public void submit(T work){
 		scheduledExecutorService.execute(work);
 		receivedCount.incrementAndGet();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.bonfire.executor.worker.Worker#submit(java.util.Date, T)
+	 */
+	@Override
 	public void submit(Date executionTime, T work){
 		scheduledExecutorService.schedule(work, executionTime.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 		receivedCount.incrementAndGet();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.bonfire.executor.worker.Worker#scheduleUntil(T, long, long, long)
+	 */
+	@Override
 	public void scheduleUntil(T work, long initialDelay, long execIntervalMs, long cancelTime){
 		ScheduledFuture<?> future = scheduledExecutorService.scheduleAtFixedRate(work, initialDelay, execIntervalMs, TimeUnit.MILLISECONDS);
 		scheduledExecutorService.schedule(new CancelRepetitiveTask(future), cancelTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.bonfire.executor.worker.Worker#scheduleUntil(T, java.util.Date, long, java.util.Date)
+	 */
+	@Override
+	public void scheduleUntil(T work, Date startTime, long execIntervalMs, Date endTime){
+		long currentTimeMs = System.currentTimeMillis();
+		long initialDelay = Math.max(startTime.getTime() - currentTimeMs, 0);
+		long cancelTimeMs = endTime.getTime();
+		if(currentTimeMs>cancelTimeMs){
+			throw new IllegalArgumentException(
+					String.format("Cannot put an endTime(%s) before startTime(%s)", 
+							endTime, startTime));
+		}
+		scheduleUntil(work, initialDelay, execIntervalMs, cancelTimeMs);
 	}
 
 	@Override
@@ -57,6 +85,10 @@ public class EventWorker<T extends Runnable> implements ManagedExecutor {
 		return receivedCount.get();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.bonfire.executor.worker.Worker#destroy()
+	 */
+	@Override
 	public void destroy(){
 		scheduledExecutorService.shutdown();
 		try {
