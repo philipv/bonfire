@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>executor</module>
-        <module>injector</module>
     </modules>
     <dependencies>
         <dependency>
