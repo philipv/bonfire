@@ -10,6 +10,6 @@ public class TestEventWorker {
 	public void testExecutor() throws InterruptedException{
 		System.setProperty("com.sun.management.jmxremote.port", "1234");
 		Worker<Runnable> testExecutor = new EventWorker<Runnable>(new DependencyInjector());
-		Thread.sleep(100000000);
+		Thread.sleep(10000);
 	}
 }
